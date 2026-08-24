@@ -1,300 +1,1181 @@
 <!DOCTYPE html>
+
 <html lang="ms">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Operasi-Bungkus 🇲🇾</title>
+
+<title>Operasi-Bungkus</title>
 
 <style>
+
 * {
+
   box-sizing: border-box;
-  user-select: none;
+
+  -webkit-tap-highlight-color: transparent;
+
 }
 
 body {
+
   margin: 0;
+
   font-family: Arial, sans-serif;
-  background: #f4f4f4;
-  text-align: center;
+
+  background: linear-gradient(#87ceeb, #dff7ff);
+
   overflow: hidden;
-}
 
-h1 {
-  margin: 12px 0 4px;
-  color: #111;
-}
+  touch-action: manipulation;
 
-#info {
-  font-size: 18px;
-  margin-bottom: 8px;
-  font-weight: bold;
 }
 
 #game {
+
+  width: 100vw;
+
+  height: 100vh;
+
   position: relative;
-  width: 100%;
-  max-width: 500px;
-  height: 65vh;
-  margin: auto;
+
   overflow: hidden;
-  background: linear-gradient(#8fd3ff 0 35%, #555 35% 100%);
-  border: 4px solid #222;
-  border-radius: 15px;
+
 }
 
-.road-line {
+#hud {
+
   position: absolute;
-  width: 8px;
-  height: 60px;
-  background: white;
+
+  top: 10px;
+
+  left: 10px;
+
+  right: 10px;
+
+  z-index: 20;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 6px;
+
+  flex-wrap: wrap;
+
+}
+
+.hudBox {
+
+  background: rgba(0,0,0,.72);
+
+  color: white;
+
+  padding: 8px 12px;
+
+  border-radius: 12px;
+
+  font-weight: bold;
+
+  font-size: 14px;
+
+}
+
+#road {
+
+  position: absolute;
+
+  bottom: 0;
+
+  left: 0;
+
+  width: 100%;
+
+  height: 72%;
+
+  background:
+
+    repeating-linear-gradient(
+
+      90deg,
+
+      #444 0px,
+
+      #444 47px,
+
+      #555 48px,
+
+      #555 95px
+
+    );
+
+  border-top: 7px solid #777;
+
+}
+
+#road::after {
+
+  content: "";
+
+  position: absolute;
+
   left: 50%;
+
+  top: 0;
+
+  width: 8px;
+
+  height: 100%;
+
   transform: translateX(-50%);
+
+  background: repeating-linear-gradient(
+
+    to bottom,
+
+    #fff 0px,
+
+    #fff 45px,
+
+    transparent 45px,
+
+    transparent 90px
+
+  );
+
   opacity: .8;
+
 }
 
 #player {
+
   position: absolute;
-  bottom: 20px;
+
+  z-index: 10;
+
+  bottom: 12%;
+
   left: 50%;
+
   transform: translateX(-50%);
-  font-size: 45px;
-  z-index: 5;
+
+  width: 70px;
+
+  height: 85px;
+
+  text-align: center;
+
+  transition: left .08s linear;
+
 }
 
-.item {
+#playerFace {
+
+  width: 58px;
+
+  height: 58px;
+
+  margin: auto;
+
+  border-radius: 50%;
+
+  background: #ffcc99;
+
+  border: 4px solid white;
+
+  box-shadow: 0 3px 8px #222;
+
+  overflow: hidden;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 40px;
+
+}
+
+#motor {
+
+  font-size: 35px;
+
+  line-height: 30px;
+
+}
+
+.obstacle {
+
   position: absolute;
+
+  z-index: 8;
+
+  font-size: 42px;
+
+  width: 60px;
+
+  height: 60px;
+
+  text-align: center;
+
+}
+
+.package {
+
+  position: absolute;
+
+  z-index: 7;
+
   font-size: 38px;
-  z-index: 4;
+
+  width: 55px;
+
+  height: 55px;
+
+  text-align: center;
+
 }
 
 #controls {
-  margin-top: 12px;
+
+  position: absolute;
+
+  bottom: 20px;
+
+  left: 0;
+
+  right: 0;
+
+  z-index: 30;
+
   display: flex;
+
   justify-content: center;
-  gap: 25px;
+
+  gap: 20px;
+
 }
 
-button {
+.controlBtn {
+
+  width: 85px;
+
+  height: 65px;
+
   border: none;
-  border-radius: 15px;
-  background: #222;
+
+  border-radius: 18px;
+
+  background: rgba(0,0,0,.75);
+
   color: white;
-  font-size: 28px;
-  width: 80px;
-  height: 60px;
+
+  font-size: 30px;
+
+  font-weight: bold;
+
 }
 
-button:active {
-  transform: scale(.9);
+.controlBtn:active {
+
+  transform: scale(.92);
+
 }
 
-#start {
-  margin-top: 10px;
-  width: 180px;
+#menu,
+
+#gameOver,
+
+#levelUp,
+
+#bossScreen {
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 100;
+
+  background: rgba(0,0,0,.82);
+
+  color: white;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 20px;
+
+}
+
+#gameOver,
+
+#levelUp,
+
+#bossScreen {
+
+  display: none;
+
+}
+
+.title {
+
+  font-size: 42px;
+
+  font-weight: 900;
+
+  margin-bottom: 8px;
+
+  color: #ffd700;
+
+  text-shadow: 3px 3px #222;
+
+}
+
+.subtitle {
+
+  font-size: 18px;
+
+  margin-bottom: 20px;
+
+}
+
+.mainBtn {
+
+  border: none;
+
+  background: #ffcc00;
+
+  color: #111;
+
+  padding: 15px 28px;
+
+  border-radius: 15px;
+
   font-size: 20px;
-  background: #198754;
+
+  font-weight: bold;
+
+  margin: 7px;
+
+}
+
+.mainBtn:active {
+
+  transform: scale(.95);
+
+}
+
+#upload {
+
+  display: none;
+
+}
+
+.uploadBtn {
+
+  display: inline-block;
+
+  background: #2196f3;
+
+  padding: 13px 20px;
+
+  border-radius: 14px;
+
+  font-weight: bold;
+
+  margin: 8px;
+
+}
+
+#boss {
+
+  position: absolute;
+
+  z-index: 50;
+
+  width: 120px;
+
+  height: 120px;
+
+  display: none;
+
+  font-size: 90px;
+
+  text-align: center;
+
+  filter: drop-shadow(0 5px 5px #111);
+
+}
+
+#bossHP {
+
+  position: absolute;
+
+  z-index: 51;
+
+  display: none;
+
+  top: 90px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  background: #111;
+
+  border: 3px solid white;
+
+  border-radius: 12px;
+
+  padding: 5px 12px;
+
+  color: #ff4444;
+
+  font-weight: bold;
+
+}
+
+#shield {
+
+  position: absolute;
+
+  z-index: 11;
+
+  bottom: 10%;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  width: 95px;
+
+  height: 95px;
+
+  border: 5px solid #00eaff;
+
+  border-radius: 50%;
+
+  display: none;
+
+  opacity: .7;
+
+  box-shadow: 0 0 25px #00eaff;
+
 }
 
 #message {
-  font-size: 20px;
+
+  position: absolute;
+
+  z-index: 60;
+
+  top: 42%;
+
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  color: white;
+
+  font-size: 28px;
+
   font-weight: bold;
-  margin-top: 8px;
+
+  text-align: center;
+
+  text-shadow: 3px 3px #000;
+
+  pointer-events: none;
+
 }
+
+.hidden {
+
+  display: none !important;
+
+}
+
 </style>
+
 </head>
 
 <body>
 
-<h1>🇲🇾 OPERASI-BUNGKUS</h1>
-
-<div id="info">
-  Bungkus: <span id="score">0</span> / 10
-</div>
-
 <div id="game">
 
-  <div class="road-line" style="top:40px"></div>
-  <div class="road-line" style="top:160px"></div>
-  <div class="road-line" style="top:280px"></div>
+  <div id="hud">
 
-  <div id="player">🛵</div>
+    <div class="hudBox">🎮 LEVEL <span id="level">1</span></div>
 
-</div>
+    <div class="hudBox">⭐ SCORE <span id="score">0</span></div>
 
-<div id="controls">
-  <button id="left">⬅️</button>
-  <button id="right">➡️</button>
-</div>
+    <div class="hudBox">⚡ SPEED <span id="speed">1</span></div>
 
-<button id="start">MULA OPERASI</button>
+    <div class="hudBox">🛡️ SHIELD <span id="shieldCount">3</span></div>
 
-<div id="message">
-  Hantar makanan Malaysia! 🍛
+  </div>
+
+  <div id="road"></div>
+
+  <div id="player">
+
+    <div id="playerFace">🙂</div>
+
+    <div id="motor">🏍️</div>
+
+  </div>
+
+  <div id="shield"></div>
+
+  <div id="boss">🐉</div>
+
+  <div id="bossHP">❤️❤️❤️</div>
+
+  <div id="message"></div>
+
+  <div id="controls">
+
+    <button class="controlBtn" id="leftBtn">⬅️</button>
+
+    <button class="controlBtn" id="rightBtn">➡️</button>
+
+  </div>
+
+  <div id="menu">
+
+    <div class="title">📦 OPERASI-BUNGKUS</div>
+
+    <div class="subtitle">
+
+      Misi penghantaran bermula!<br>
+
+      Elakkan halangan dan kumpulkan bungkusan.
+
+    </div>
+
+    <label class="uploadBtn">
+
+      📸 Masukkan Kepala Sendiri
+
+      <input id="upload" type="file" accept="image/*">
+
+    </label>
+
+    <button class="mainBtn" id="startBtn">🚀 MULA GAME</button>
+
+  </div>
+
+  <div id="levelUp">
+
+    <div class="title">🎉 LEVEL UP!</div>
+
+    <div class="subtitle" id="levelText"></div>
+
+    <button class="mainBtn" id="continueBtn">▶️ TERUSKAN</button>
+
+  </div>
+
+  <div id="bossScreen">
+
+    <div class="title">🐉 FINAL BOSS!</div>
+
+    <div class="subtitle">
+
+      Naga besar muncul!<br>
+
+      Tekan naga sebanyak 3 kali untuk mengalahkannya!
+
+    </div>
+
+    <button class="mainBtn" id="fightBtn">⚔️ LAWAN NAGA</button>
+
+  </div>
+
+  <div id="gameOver">
+
+    <div class="title">💥 GAME OVER</div>
+
+    <div class="subtitle">
+
+      Score: <span id="finalScore">0</span><br>
+
+      Level: <span id="finalLevel">1</span>
+
+    </div>
+
+    <button class="mainBtn" id="restartBtn">🔄 MAIN SEMULA</button>
+
+  </div>
+
 </div>
 
 <script>
 
-const game = document.getElementById("game");
-const player = document.getElementById("player");
-const scoreText = document.getElementById("score");
-const message = document.getElementById("message");
-const startButton = document.getElementById("start");
+let gameRunning = false;
+
+let level = 1;
+
+let score = 0;
+
+let speed = 1;
+
+let shieldCount = 3;
 
 let playerX = 50;
-let score = 0;
-let running = false;
+
 let objects = [];
-let gameTimer;
+
+let spawnTimer;
+
+let animationFrame;
+
+let bossActive = false;
+
+let bossHP = 3;
+
+let bossX = 50;
+
+let bossY = 20;
+
+let bossDirection = 1;
+
+const game = document.getElementById("game");
+
+const player = document.getElementById("player");
+
+const playerFace = document.getElementById("playerFace");
+
+const levelDisplay = document.getElementById("level");
+
+const scoreDisplay = document.getElementById("score");
+
+const speedDisplay = document.getElementById("speed");
+
+const shieldDisplay = document.getElementById("shieldCount");
+
+const menu = document.getElementById("menu");
+
+const gameOver = document.getElementById("gameOver");
+
+const levelUp = document.getElementById("levelUp");
+
+const bossScreen = document.getElementById("bossScreen");
+
+const boss = document.getElementById("boss");
+
+const bossHPDisplay = document.getElementById("bossHP");
+
+const shield = document.getElementById("shield");
+
+function updateHUD() {
+
+  levelDisplay.textContent = level;
+
+  scoreDisplay.textContent = score;
+
+  speedDisplay.textContent = speed.toFixed(1);
+
+  shieldDisplay.textContent = shieldCount;
+
+}
 
 function movePlayer(direction) {
 
-  if (!running) return;
+  if (!gameRunning || bossActive) return;
 
-  playerX += direction * 8;
+  playerX += direction * 7;
 
-  if (playerX < 10) playerX = 10;
-  if (playerX > 90) playerX = 90;
+  if (playerX < 12) playerX = 12;
+
+  if (playerX > 88) playerX = 88;
 
   player.style.left = playerX + "%";
+
+  shield.style.left = playerX + "%";
+
 }
 
-document.getElementById("left").addEventListener("touchstart", function(e) {
+document.getElementById("leftBtn").addEventListener("touchstart", e => {
+
   e.preventDefault();
+
   movePlayer(-1);
+
 });
 
-document.getElementById("right").addEventListener("touchstart", function(e) {
+document.getElementById("rightBtn").addEventListener("touchstart", e => {
+
   e.preventDefault();
+
   movePlayer(1);
+
 });
 
-document.getElementById("left").addEventListener("click", function() {
-  movePlayer(-1);
+document.getElementById("leftBtn").addEventListener("click", () => movePlayer(-1));
+
+document.getElementById("rightBtn").addEventListener("click", () => movePlayer(1));
+
+document.addEventListener("keydown", e => {
+
+  if (e.key === "ArrowLeft") movePlayer(-1);
+
+  if (e.key === "ArrowRight") movePlayer(1);
+
 });
 
-document.getElementById("right").addEventListener("click", function() {
-  movePlayer(1);
+document.getElementById("upload").addEventListener("change", function(e) {
+
+  const file = e.target.files[0];
+
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(event) {
+
+    playerFace.innerHTML =
+
+      `<img src="${event.target.result}"
+
+      style="width:100%;height:100%;object-fit:cover;">`;
+
+  };
+
+  reader.readAsDataURL(file);
+
 });
 
-function createObject() {
+document.getElementById("startBtn").onclick = startGame;
 
-  if (!running) return;
+function startGame() {
 
-  const object = document.createElement("div");
-  object.className = "item";
+  menu.style.display = "none";
 
-  const random = Math.random();
+  gameOver.style.display = "none";
 
-  if (random < 0.65) {
-    object.textContent = "🍛";
-    object.dataset.type = "food";
-  } else {
-    object.textContent = "🚗";
-    object.dataset.type = "car";
-  }
+  levelUp.style.display = "none";
 
-  object.style.left = (10 + Math.random() * 80) + "%";
-  object.style.top = "-50px";
+  level = 1;
 
-  game.appendChild(object);
-  objects.push(object);
+  score = 0;
 
-  let y = -50;
+  speed = 1;
 
-  const fall = setInterval(() => {
+  shieldCount = 3;
 
-    if (!running) {
-      clearInterval(fall);
-      return;
-    }
+  playerX = 50;
 
-    y += 4;
-    object.style.top = y + "px";
+  player.style.left = "50%";
+
+  shield.style.left = "50%";
+
+  objects.forEach(o => o.element.remove());
+
+  objects = [];
+
+  bossActive = false;
+
+  updateHUD();
+
+  gameRunning = true;
+
+  startSpawning();
+
+  gameLoop();
+
+}
+
+function startSpawning() {
+
+  clearInterval(spawnTimer);
+
+  spawnTimer = setInterval(() => {
+
+    if (!gameRunning || bossActive) return;
+
+    spawnObject();
+
+  }, Math.max(450, 1000 - level * 100));
+
+}
+
+function spawnObject() {
+
+  const isPackage = Math.random() < 0.38;
+
+  const element = document.createElement("div");
+
+  element.className = isPackage ? "package" : "obstacle";
+
+  element.textContent = isPackage
+
+    ? ["📦","🎁","🛍️"][Math.floor(Math.random()*3)]
+
+    : ["🚧","🪨","🚗","🛵"][Math.floor(Math.random()*4)];
+
+  const x = 10 + Math.random() * 80;
+
+  element.style.left = x + "%";
+
+  element.style.top = "-70px";
+
+  game.appendChild(element);
+
+  objects.push({
+
+    element: element,
+
+    x: x,
+
+    y: -70,
+
+    type: isPackage ? "package" : "obstacle"
+
+  });
+
+}
+
+function gameLoop() {
+
+  if (!gameRunning) return;
+
+  objects.forEach((obj, index) => {
+
+    obj.y += 3 + speed * 1.5;
+
+    obj.element.style.top = obj.y + "px";
 
     const playerRect = player.getBoundingClientRect();
-    const objectRect = object.getBoundingClientRect();
+
+    const objectRect = obj.element.getBoundingClientRect();
 
     if (
-      playerRect.left < objectRect.right &&
-      playerRect.right > objectRect.left &&
-      playerRect.top < objectRect.bottom &&
-      playerRect.bottom > objectRect.top
+
+      objectRect.bottom > playerRect.top + 15 &&
+
+      objectRect.top < playerRect.bottom &&
+
+      objectRect.right > playerRect.left &&
+
+      objectRect.left < playerRect.right
+
     ) {
 
-      clearInterval(fall);
+      if (obj.type === "package") {
 
-      if (object.dataset.type === "food") {
+        score += 10;
 
-        score++;
-        scoreText.textContent = score;
+        showMessage("📦 +10");
 
-        message.textContent = "🍛 Bungkus berjaya! Teruskan!";
+        removeObject(index);
 
-        object.remove();
+        if (score % 100 === 0) {
 
-        if (score >= 10) {
-          winGame();
+          levelUpCheck();
+
         }
 
       } else {
 
-        endGame("💥 Aduh! Langgar kereta!");
+        if (shieldCount > 0) {
 
-        object.remove();
+          shieldCount--;
+
+          shield.style.display = "block";
+
+          setTimeout(() => {
+
+            shield.style.display = "none";
+
+          }, 500);
+
+          showMessage("🛡️ SHIELD!");
+
+          removeObject(index);
+
+          updateHUD();
+
+        } else {
+
+          endGame();
+
+        }
+
       }
 
-      return;
     }
 
-    if (y > game.clientHeight) {
-      clearInterval(fall);
-      object.remove();
+    if (obj.y > window.innerHeight + 100) {
+
+      removeObject(index);
+
     }
 
-  }, 30);
+  });
+
+  animationFrame = requestAnimationFrame(gameLoop);
+
 }
 
-function startGame() {
+function removeObject(index) {
 
-  objects.forEach(o => o.remove());
+  if (!objects[index]) return;
+
+  objects[index].element.remove();
+
+  objects.splice(index, 1);
+
+}
+
+function showMessage(text) {
+
+  const message = document.getElementById("message");
+
+  message.textContent = text;
+
+  setTimeout(() => {
+
+    message.textContent = "";
+
+  }, 600);
+
+}
+
+function levelUpCheck() {
+
+  if (level >= 5) {
+
+    startBoss();
+
+    return;
+
+  }
+
+  level++;
+
+  speed += 0.7;
+
+  updateHUD();
+
+  gameRunning = false;
+
+  clearInterval(spawnTimer);
+
+  document.getElementById("levelText").textContent =
+
+    "Tahniah! Anda telah sampai Level " + level +
+
+    ". Kelajuan semakin pantas!";
+
+  levelUp.style.display = "flex";
+
+}
+
+document.getElementById("continueBtn").onclick = function() {
+
+  levelUp.style.display = "none";
+
+  gameRunning = true;
+
+  startSpawning();
+
+  gameLoop();
+
+};
+
+function startBoss() {
+
+  gameRunning = false;
+
+  clearInterval(spawnTimer);
+
+  objects.forEach(o => o.element.remove());
+
   objects = [];
 
-  score = 0;
-  playerX = 50;
-
-  scoreText.textContent = "0";
-  player.style.left = "50%";
-
-  message.textContent = "🚀 Operasi bermula!";
-
-  running = true;
-
-  clearInterval(gameTimer);
-
-  gameTimer = setInterval(createObject, 900);
-}
-
-function endGame(text) {
-
-  running = false;
-  clearInterval(gameTimer);
-
-  message.textContent = text + " Cuba lagi!";
-}
-
-function winGame() {
-
-  running = false;
-  clearInterval(gameTimer);
-
-  message.textContent =
-    "🇲🇾 MANTAP! Uwais Al Qarni 10 bungkus - berjaya dihantar! 🎉";
+  bossScreen.style.display = "flex";
 
 }
 
-startButton.addEventListener("click", startGame);
+document.getElementById("fightBtn").onclick = function() {
+
+  bossScreen.style.display = "none";
+
+  bossActive = true;
+
+  bossHP = 3;
+
+  boss.style.display = "block";
+
+  bossHPDisplay.style.display = "block";
+
+  updateBossHP();
+
+  bossX = 50;
+
+  bossY = 18;
+
+  bossDirection = 1;
+
+  boss.style.left = bossX + "%";
+
+  boss.style.top = bossY + "%";
+
+  gameRunning = true;
+
+  bossLoop();
+
+};
+
+function updateBossHP() {
+
+  bossHPDisplay.textContent =
+
+    "❤️".repeat(bossHP);
+
+}
+
+boss.addEventListener("click", hitBoss);
+
+boss.addEventListener("touchstart", function(e) {
+
+  e.preventDefault();
+
+  hitBoss();
+
+});
+
+function hitBoss() {
+
+  if (!bossActive) return;
+
+  bossHP--;
+
+  updateBossHP();
+
+  showMessage("⚔️ HIT!");
+
+  boss.style.transform = "scale(1.3)";
+
+  setTimeout(() => {
+
+    boss.style.transform = "scale(1)";
+
+  }, 120);
+
+  if (bossHP <= 0) {
+
+    bossDefeated();
+
+  }
+
+}
+
+function bossLoop() {
+
+  if (!bossActive) return;
+
+  bossX += bossDirection * 0.7;
+
+  if (bossX > 82) {
+
+    bossDirection = -1;
+
+  }
+
+  if (bossX < 8) {
+
+    bossDirection = 1;
+
+  }
+
+  bossY =
+
+    15 +
+
+    Math.sin(Date.now() / 500) * 7;
+
+  boss.style.left = bossX + "%";
+
+  boss.style.top = bossY + "%";
+
+  animationFrame = requestAnimationFrame(bossLoop);
+
+}
+
+function bossDefeated() {
+
+  bossActive = false;
+
+  gameRunning = false;
+
+  boss.style.display = "none";
+
+  bossHPDisplay.style.display = "none";
+
+  score += 500;
+
+  updateHUD();
+
+  setTimeout(() => {
+
+    alert(
+
+      "🏆 TAHNIAH!\n\n" +
+
+      "Naga telah dikalahkan!\n" +
+
+      "Operasi-Bungkus berjaya!\n\n" +
+
+      "Score: " + score
+
+    );
+
+    location.reload();
+
+  }, 300);
+
+}
+
+function endGame() {
+
+  gameRunning = false;
+
+  clearInterval(spawnTimer);
+
+  cancelAnimationFrame(animationFrame);
+
+  document.getElementById("finalScore").textContent = score;
+
+  document.getElementById("finalLevel").textContent = level;
+
+  gameOver.style.display = "flex";
+
+}
+
+document.getElementById("restartBtn").onclick = function() {
+
+  gameOver.style.display = "none";
+
+  startGame();
+
+};
+
+updateHUD();
 
 </script>
 
 </body>
+
 </html>
