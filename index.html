@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operasi-Bungkus 🇲🇾</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  text-align: center;
+  overflow: hidden;
+}
+
+h1 {
+  margin: 12px 0 4px;
+  color: #111;
+}
+
+#info {
+  font-size: 18px;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+#game {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  height: 65vh;
+  margin: auto;
+  overflow: hidden;
+  background: linear-gradient(#8fd3ff 0 35%, #555 35% 100%);
+  border: 4px solid #222;
+  border-radius: 15px;
+}
+
+.road-line {
+  position: absolute;
+  width: 8px;
+  height: 60px;
+  background: white;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: .8;
+}
+
+#player {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 45px;
+  z-index: 5;
+}
+
+.item {
+  position: absolute;
+  font-size: 38px;
+  z-index: 4;
+}
+
+#controls {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+}
+
+button {
+  border: none;
+  border-radius: 15px;
+  background: #222;
+  color: white;
+  font-size: 28px;
+  width: 80px;
+  height: 60px;
+}
+
+button:active {
+  transform: scale(.9);
+}
+
+#start {
+  margin-top: 10px;
+  width: 180px;
+  font-size: 20px;
+  background: #198754;
+}
+
+#message {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🇲🇾 OPERASI-BUNGKUS</h1>
+
+<div id="info">
+  Bungkus: <span id="score">0</span> / 10
+</div>
+
+<div id="game">
+
+  <div class="road-line" style="top:40px"></div>
+  <div class="road-line" style="top:160px"></div>
+  <div class="road-line" style="top:280px"></div>
+
+  <div id="player">🛵</div>
+
+</div>
+
+<div id="controls">
+  <button id="left">⬅️</button>
+  <button id="right">➡️</button>
+</div>
+
+<button id="start">MULA OPERASI</button>
+
+<div id="message">
+  Hantar makanan Malaysia! 🍛
+</div>
+
+<script>
+
+const game = document.getElementById("game");
+const player = document.getElementById("player");
+const scoreText = document.getElementById("score");
+const message = document.getElementById("message");
+const startButton = document.getElementById("start");
+
+let playerX = 50;
+let score = 0;
+let running = false;
+let objects = [];
+let gameTimer;
+
+function movePlayer(direction) {
+
+  if (!running) return;
+
+  playerX += direction * 8;
+
+  if (playerX < 10) playerX = 10;
+  if (playerX > 90) playerX = 90;
+
+  player.style.left = playerX + "%";
+}
+
+document.getElementById("left").addEventListener("touchstart", function(e) {
+  e.preventDefault();
+  movePlayer(-1);
+});
+
+document.getElementById("right").addEventListener("touchstart", function(e) {
+  e.preventDefault();
+  movePlayer(1);
+});
+
+document.getElementById("left").addEventListener("click", function() {
+  movePlayer(-1);
+});
+
+document.getElementById("right").addEventListener("click", function() {
+  movePlayer(1);
+});
+
+function createObject() {
+
+  if (!running) return;
+
+  const object = document.createElement("div");
+  object.className = "item";
+
+  const random = Math.random();
+
+  if (random < 0.65) {
+    object.textContent = "🍛";
+    object.dataset.type = "food";
+  } else {
+    object.textContent = "🚗";
+    object.dataset.type = "car";
+  }
+
+  object.style.left = (10 + Math.random() * 80) + "%";
+  object.style.top = "-50px";
+
+  game.appendChild(object);
+  objects.push(object);
+
+  let y = -50;
+
+  const fall = setInterval(() => {
+
+    if (!running) {
+      clearInterval(fall);
+      return;
+    }
+
+    y += 4;
+    object.style.top = y + "px";
+
+    const playerRect = player.getBoundingClientRect();
+    const objectRect = object.getBoundingClientRect();
+
+    if (
+      playerRect.left < objectRect.right &&
+      playerRect.right > objectRect.left &&
+      playerRect.top < objectRect.bottom &&
+      playerRect.bottom > objectRect.top
+    ) {
+
+      clearInterval(fall);
+
+      if (object.dataset.type === "food") {
+
+        score++;
+        scoreText.textContent = score;
+
+        message.textContent = "🍛 Bungkus berjaya! Teruskan!";
+
+        object.remove();
+
+        if (score >= 10) {
+          winGame();
+        }
+
+      } else {
+
+        endGame("💥 Aduh! Langgar kereta!");
+
+        object.remove();
+      }
+
+      return;
+    }
+
+    if (y > game.clientHeight) {
+      clearInterval(fall);
+      object.remove();
+    }
+
+  }, 30);
+}
+
+function startGame() {
+
+  objects.forEach(o => o.remove());
+  objects = [];
+
+  score = 0;
+  playerX = 50;
+
+  scoreText.textContent = "0";
+  player.style.left = "50%";
+
+  message.textContent = "🚀 Operasi bermula!";
+
+  running = true;
+
+  clearInterval(gameTimer);
+
+  gameTimer = setInterval(createObject, 900);
+}
+
+function endGame(text) {
+
+  running = false;
+  clearInterval(gameTimer);
+
+  message.textContent = text + " Cuba lagi!";
+}
+
+function winGame() {
+
+  running = false;
+  clearInterval(gameTimer);
+
+  message.textContent =
+    "🇲🇾 MANTAP! 10 bungkus berjaya dihantar! 🎉";
+
+}
+
+startButton.addEventListener("click", startGame);
+
+</script>
+
+</body>
+</html>
