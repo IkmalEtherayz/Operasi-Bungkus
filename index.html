@@ -1391,6 +1391,215 @@ cameraButton.style.cssText = `
 cameraButton.onclick = openGameCamera;
 
 document.body.appendChild(cameraButton);
+<!-- PLAYER CAMERA -->
+
+<script>
+
+const cameraButton = document.createElement("button");
+
+cameraButton.innerHTML = "📷 CAMERA";
+
+cameraButton.style.position = "fixed";
+
+cameraButton.style.right = "20px";
+
+cameraButton.style.bottom = "90px";
+
+cameraButton.style.zIndex = "9998";
+
+cameraButton.style.padding = "12px 18px";
+
+cameraButton.style.border = "0";
+
+cameraButton.style.borderRadius = "25px";
+
+cameraButton.style.background = "#222";
+
+cameraButton.style.color = "#fff";
+
+cameraButton.style.fontSize = "16px";
+
+cameraButton.style.fontWeight = "bold";
+
+cameraButton.style.boxShadow = "0 4px 12px rgba(0,0,0,0.3)";
+
+async function openGameCamera() {
+
+  const cameraOverlay = document.createElement("div");
+
+  cameraOverlay.style.position = "fixed";
+
+  cameraOverlay.style.inset = "0";
+
+  cameraOverlay.style.background = "#000";
+
+  cameraOverlay.style.zIndex = "99999";
+
+  cameraOverlay.style.display = "flex";
+
+  cameraOverlay.style.flexDirection = "column";
+
+  cameraOverlay.style.alignItems = "center";
+
+  cameraOverlay.style.justifyContent = "center";
+
+  const video = document.createElement("video");
+
+  video.autoplay = true;
+
+  video.playsInline = true;
+
+  video.muted = true;
+
+  video.style.width = "90%";
+
+  video.style.maxWidth = "420px";
+
+  video.style.borderRadius = "20px";
+
+  const captureButton = document.createElement("button");
+
+  captureButton.innerHTML = "📸 AMBIL GAMBAR";
+
+  captureButton.style.marginTop = "20px";
+
+  captureButton.style.padding = "14px 22px";
+
+  captureButton.style.border = "0";
+
+  captureButton.style.borderRadius = "25px";
+
+  captureButton.style.fontSize = "17px";
+
+  captureButton.style.fontWeight = "bold";
+
+  const closeButton = document.createElement("button");
+
+  closeButton.innerHTML = "✕ TUTUP";
+
+  closeButton.style.marginTop = "12px";
+
+  closeButton.style.padding = "10px 20px";
+
+  closeButton.style.border = "0";
+
+  closeButton.style.borderRadius = "20px";
+
+  cameraOverlay.appendChild(video);
+
+  cameraOverlay.appendChild(captureButton);
+
+  cameraOverlay.appendChild(closeButton);
+
+  document.body.appendChild(cameraOverlay);
+
+  let stream;
+
+  try {
+
+    stream = await navigator.mediaDevices.getUserMedia({
+
+      video: {
+
+        facingMode: "user"
+
+      },
+
+      audio: false
+
+    });
+
+    video.srcObject = stream;
+
+  } catch (error) {
+
+    alert("Camera access is required to take the player photo.");
+
+    cameraOverlay.remove();
+
+    return;
+
+  }
+
+  captureButton.onclick = () => {
+
+    const canvas = document.createElement("canvas");
+
+    canvas.width = video.videoWidth;
+
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext("2d");
+
+    ctx.translate(canvas.width, 0);
+
+    ctx.scale(-1, 1);
+
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const photo = canvas.toDataURL("image/jpeg", 0.9);
+
+    localStorage.setItem("operasiBungkusPlayerPhoto", photo);
+
+    const img = document.createElement("img");
+
+    img.src = photo;
+
+    img.style.position = "fixed";
+
+    img.style.top = "20px";
+
+    img.style.left = "20px";
+
+    img.style.width = "70px";
+
+    img.style.height = "70px";
+
+    img.style.objectFit = "cover";
+
+    img.style.borderRadius = "50%";
+
+    img.style.border = "3px solid white";
+
+    img.style.zIndex = "9997";
+
+    const oldPhoto = document.getElementById("playerPhoto");
+
+    if (oldPhoto) {
+
+      oldPhoto.remove();
+
+    }
+
+    img.id = "playerPhoto";
+
+    document.body.appendChild(img);
+
+    stream.getTracks().forEach(track => track.stop());
+
+    cameraOverlay.remove();
+
+  };
+
+  closeButton.onclick = () => {
+
+    if (stream) {
+
+      stream.getTracks().forEach(track => track.stop());
+
+    }
+
+    cameraOverlay.remove();
+
+  };
+
+}
+
+cameraButton.onclick = openGameCamera;
+
+document.body.appendChild(cameraButton);
+
+</script>
 </script>
 
 </body>
