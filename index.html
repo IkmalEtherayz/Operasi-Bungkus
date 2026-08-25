@@ -12,93 +12,673 @@
 
 <style>
 
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+*{
 
-body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(180deg,#eef6ff,#d9eaff);color:#17324d;min-height:100vh;overflow:hidden;touch-action:manipulation}
+  box-sizing:border-box;
 
-.game{width:100%;max-width:520px;min-height:100vh;margin:auto;padding:18px 16px 22px;display:flex;flex-direction:column}
+  -webkit-tap-highlight-color:transparent;
 
-.header{text-align:center;background:white;border-radius:20px;padding:14px 12px;box-shadow:0 5px 18px rgba(0,0,0,.12)}
+}
 
-.header h1{margin:0;font-size:28px}.header p{margin:5px 0 0;font-size:14px}
+body{
 
-.stats{display:flex;justify-content:space-between;gap:8px;margin-top:12px}
+  margin:0;
 
-.stat{flex:1;background:white;border-radius:14px;padding:9px 5px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.08);font-weight:bold}
+  font-family:Arial,sans-serif;
 
-.label{display:block;font-size:11px;opacity:.65}.value{display:block;font-size:20px;margin-top:2px}
+  background:linear-gradient(180deg,#eef6ff,#d9eaff);
 
-.game-area{position:relative;flex:1;margin-top:12px;min-height:390px;background:linear-gradient(#ffffffaa,#ffffffaa),repeating-linear-gradient(45deg,#d9c19a 0,#d9c19a 22px,#cdb287 22px,#cdb287 44px);border:5px solid white;border-radius:24px;overflow:hidden;box-shadow:inset 0 0 20px rgba(0,0,0,.12),0 5px 18px rgba(0,0,0,.12)}
+  color:#17324d;
 
-.instructions{text-align:center;padding:10px;font-weight:bold;background:rgba(255,255,255,.85);border-radius:14px;margin:10px}
+  min-height:100vh;
 
-.package,.wrong-item{position:absolute;width:64px;height:64px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 5px 10px rgba(0,0,0,.25);z-index:5}
+  overflow:hidden;
 
-.package{background:#c98a45;border:4px solid #8b5a2b}
+  touch-action:manipulation;
 
-.package:after{content:"";position:absolute;width:7px;height:100%;background:#f1d08b;opacity:.9}
+}
 
-.wrong-item{background:#d9534f;border:4px solid #922b27}
+.game{
 
-.wrong-item.bomb{background:#444;border-color:#111}
+  width:100%;
 
-.wrong-item.brick{background:#9e9e9e;border-color:#666}
+  max-width:520px;
 
-.wrong-item.can{background:#8bc34a;border-color:#558b2f}
+  min-height:100vh;
 
-.player{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);width:72px;height:72px;border-radius:50%;background:#1976d2;border:5px solid white;display:flex;align-items:center;justify-content:center;font-size:38px;box-shadow:0 5px 12px rgba(0,0,0,.3);z-index:10;background-size:cover;background-position:center;overflow:hidden}
+  margin:auto;
 
-.boss{position:absolute;top:48px;left:50%;transform:translateX(-50%);font-size:72px;z-index:7;display:none;filter:drop-shadow(0 5px 5px rgba(0,0,0,.35))}
+  padding:18px 16px 22px;
 
-.boss.show{display:block}
+  display:flex;
 
-.boss-bar{position:absolute;top:10px;left:12%;width:76%;height:16px;background:#222;border-radius:10px;overflow:hidden;z-index:8;display:none}
+  flex-direction:column;
 
-.boss-bar.show{display:block}
+}
 
-.boss-hp{height:100%;width:100%;background:#e53935}
+.header{
 
-.controls{display:flex;justify-content:space-between;gap:30px;margin-top:14px;padding:0 12px}
+  text-align:center;
 
-.control{flex:1;height:76px;border:none;border-radius:22px;background:white;color:#17324d;font-size:38px;font-weight:bold;box-shadow:0 6px 15px rgba(0,0,0,.18);touch-action:none;user-select:none}
+  background:white;
 
-.control:active{transform:scale(.94);background:#e8f2ff}
+  border-radius:20px;
 
-.message{text-align:center;min-height:28px;margin-top:7px;font-weight:bold;font-size:16px}
+  padding:14px 12px;
 
-.overlay{position:fixed;inset:0;background:rgba(8,25,40,.78);display:none;align-items:center;justify-content:center;padding:22px;z-index:100}
+  box-shadow:0 5px 18px rgba(0,0,0,.12);
 
-.overlay.show{display:flex}
+}
 
-.panel{width:100%;max-width:400px;background:white;border-radius:25px;padding:28px 22px;text-align:center;box-shadow:0 10px 35px rgba(0,0,0,.35)}
+.header h1{
 
-.panel h2{margin-top:0;font-size:30px}
+  margin:0;
 
-.start-btn,.camera-intro-btn{width:100%;border:none;border-radius:17px;padding:17px;color:white;font-size:20px;font-weight:bold;margin-top:12px}
+  font-size:28px;
 
-.start-btn{background:#1976d2}
+}
 
-.start-btn:disabled{background:#aab7c4;opacity:.7}
+.header p{
 
-.camera-intro-btn{background:#222}
+  margin:5px 0 0;
 
-.photo-status{margin-top:12px;font-weight:bold;font-size:14px}
+  font-size:14px;
 
-.rank{margin-top:18px;background:#f1f6fa;border-radius:15px;padding:12px;text-align:left}
+}
 
-.rank-title{font-weight:bold;text-align:center;margin-bottom:7px}
+.stats{
 
-.rank-row{display:flex;justify-content:space-between;padding:5px 2px}
+  display:flex;
 
-#cameraOverlay{position:fixed;inset:0;background:#000;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+  justify-content:space-between;
 
-#cameraOverlay video{width:100%;max-width:420px;max-height:70vh;object-fit:cover;border-radius:20px;transform:scaleX(-1)}
+  gap:8px;
 
-.camera-action{margin-top:20px;padding:14px 28px;border:0;border-radius:30px;background:white;color:#111;font-size:18px;font-weight:bold}
+  margin-top:12px;
 
-.camera-close{margin-top:10px;padding:10px 22px;border:0;border-radius:20px;background:#333;color:white;font-size:15px}
+}
 
-@media(max-height:700px){.game-area{min-height:300px}.control{height:65px}}
+.stat{
+
+  flex:1;
+
+  background:white;
+
+  border-radius:14px;
+
+  padding:9px 5px;
+
+  text-align:center;
+
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+  font-weight:bold;
+
+}
+
+.label{
+
+  display:block;
+
+  font-size:11px;
+
+  opacity:.65;
+
+}
+
+.value{
+
+  display:block;
+
+  font-size:20px;
+
+  margin-top:2px;
+
+}
+
+.game-area{
+
+  position:relative;
+
+  flex:1;
+
+  margin-top:12px;
+
+  min-height:390px;
+
+  background:
+
+    linear-gradient(#ffffffaa,#ffffffaa),
+
+    repeating-linear-gradient(
+
+      45deg,
+
+      #d9c19a 0,
+
+      #d9c19a 22px,
+
+      #cdb287 22px,
+
+      #cdb287 44px
+
+    );
+
+  border:5px solid white;
+
+  border-radius:24px;
+
+  overflow:hidden;
+
+  box-shadow:
+
+    inset 0 0 20px rgba(0,0,0,.12),
+
+    0 5px 18px rgba(0,0,0,.12);
+
+}
+
+.instructions{
+
+  text-align:center;
+
+  padding:10px;
+
+  font-weight:bold;
+
+  background:rgba(255,255,255,.85);
+
+  border-radius:14px;
+
+  margin:10px;
+
+  position:relative;
+
+  z-index:20;
+
+}
+
+.package,
+
+.wrong-item{
+
+  position:absolute;
+
+  width:64px;
+
+  height:64px;
+
+  border-radius:13px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  font-size:34px;
+
+  box-shadow:0 5px 10px rgba(0,0,0,.25);
+
+  z-index:5;
+
+}
+
+.package{
+
+  background:#c98a45;
+
+  border:4px solid #8b5a2b;
+
+}
+
+.package::after{
+
+  content:"";
+
+  position:absolute;
+
+  width:7px;
+
+  height:100%;
+
+  background:#f1d08b;
+
+  opacity:.9;
+
+}
+
+.wrong-item{
+
+  background:#d9534f;
+
+  border:4px solid #922b27;
+
+}
+
+.wrong-item.bomb{
+
+  background:#444;
+
+  border-color:#111;
+
+}
+
+.wrong-item.brick{
+
+  background:#9e9e9e;
+
+  border-color:#666;
+
+}
+
+.wrong-item.can{
+
+  background:#8bc34a;
+
+  border-color:#558b2f;
+
+}
+
+.player{
+
+  position:absolute;
+
+  bottom:18px;
+
+  left:50%;
+
+  transform:translateX(-50%);
+
+  width:72px;
+
+  height:72px;
+
+  border-radius:50%;
+
+  background:#1976d2;
+
+  border:5px solid white;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  font-size:38px;
+
+  box-shadow:0 5px 12px rgba(0,0,0,.3);
+
+  z-index:10;
+
+  background-size:cover;
+
+  background-position:center;
+
+  overflow:hidden;
+
+}
+
+.boss{
+
+  position:absolute;
+
+  top:55px;
+
+  left:50%;
+
+  transform:translateX(-50%);
+
+  font-size:72px;
+
+  z-index:15;
+
+  display:none;
+
+  filter:drop-shadow(0 5px 5px rgba(0,0,0,.35));
+
+}
+
+.boss.show{
+
+  display:block;
+
+}
+
+.boss-bar{
+
+  position:absolute;
+
+  top:10px;
+
+  left:12%;
+
+  width:76%;
+
+  height:16px;
+
+  background:#222;
+
+  border-radius:10px;
+
+  overflow:hidden;
+
+  z-index:25;
+
+  display:none;
+
+}
+
+.boss-bar.show{
+
+  display:block;
+
+}
+
+.boss-hp{
+
+  height:100%;
+
+  width:100%;
+
+  background:#e53935;
+
+  transition:width .15s;
+
+}
+
+.controls{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  gap:30px;
+
+  margin-top:14px;
+
+  padding:0 12px;
+
+}
+
+.control{
+
+  flex:1;
+
+  height:76px;
+
+  border:none;
+
+  border-radius:22px;
+
+  background:white;
+
+  color:#17324d;
+
+  font-size:38px;
+
+  font-weight:bold;
+
+  box-shadow:0 6px 15px rgba(0,0,0,.18);
+
+  touch-action:none;
+
+  user-select:none;
+
+}
+
+.control:active{
+
+  transform:scale(.94);
+
+  background:#e8f2ff;
+
+}
+
+.message{
+
+  text-align:center;
+
+  min-height:28px;
+
+  margin-top:7px;
+
+  font-weight:bold;
+
+  font-size:16px;
+
+}
+
+.overlay{
+
+  position:fixed;
+
+  inset:0;
+
+  background:rgba(8,25,40,.78);
+
+  display:none;
+
+  align-items:center;
+
+  justify-content:center;
+
+  padding:22px;
+
+  z-index:100;
+
+}
+
+.overlay.show{
+
+  display:flex;
+
+}
+
+.panel{
+
+  width:100%;
+
+  max-width:400px;
+
+  background:white;
+
+  border-radius:25px;
+
+  padding:28px 22px;
+
+  text-align:center;
+
+  box-shadow:0 10px 35px rgba(0,0,0,.35);
+
+}
+
+.panel h2{
+
+  margin-top:0;
+
+  font-size:30px;
+
+}
+
+.start-btn,
+
+.camera-intro-btn{
+
+  width:100%;
+
+  border:none;
+
+  border-radius:17px;
+
+  padding:17px;
+
+  color:white;
+
+  font-size:20px;
+
+  font-weight:bold;
+
+  margin-top:12px;
+
+}
+
+.start-btn{
+
+  background:#1976d2;
+
+}
+
+.start-btn:disabled{
+
+  background:#aab7c4;
+
+  opacity:.7;
+
+}
+
+.camera-intro-btn{
+
+  background:#222;
+
+}
+
+.photo-status{
+
+  margin-top:12px;
+
+  font-weight:bold;
+
+  font-size:14px;
+
+}
+
+.rank{
+
+  margin-top:18px;
+
+  background:#f1f6fa;
+
+  border-radius:15px;
+
+  padding:12px;
+
+  text-align:left;
+
+}
+
+.rank-title{
+
+  font-weight:bold;
+
+  text-align:center;
+
+  margin-bottom:7px;
+
+}
+
+.rank-row{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  padding:5px 2px;
+
+}
+
+#cameraOverlay{
+
+  position:fixed;
+
+  inset:0;
+
+  background:#000;
+
+  z-index:99999;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  justify-content:center;
+
+  padding:20px;
+
+}
+
+#cameraOverlay video{
+
+  width:100%;
+
+  max-width:420px;
+
+  max-height:70vh;
+
+  object-fit:cover;
+
+  border-radius:20px;
+
+  transform:scaleX(-1);
+
+}
+
+.camera-action{
+
+  margin-top:20px;
+
+  padding:14px 28px;
+
+  border:0;
+
+  border-radius:30px;
+
+  background:white;
+
+  color:#111;
+
+  font-size:18px;
+
+  font-weight:bold;
+
+}
+
+.camera-close{
+
+  margin-top:10px;
+
+  padding:10px 22px;
+
+  border:0;
+
+  border-radius:20px;
+
+  background:#333;
+
+  color:white;
+
+  font-size:15px;
+
+}
+
+@media(max-height:700px){
+
+  .game-area{
+
+    min-height:300px;
+
+  }
+
+  .control{
+
+    height:65px;
+
+  }
+
+}
 
 </style>
 
@@ -108,61 +688,87 @@ body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(180deg,#ee
 
 <div class="game">
 
-<div class="header">
+  <div class="header">
 
-<h1>📦 Operasi Bungkus</h1>
+    <h1>📦 Operasi Bungkus</h1>
 
-<p>Tangkap barang yang betul!</p>
+    <p>Tangkap barang yang betul!</p>
 
-</div>
+  </div>
 
-<div class="stats">
+  <div class="stats">
 
-<div class="stat"><span class="label">LEVEL</span><span class="value" id="level">1</span></div>
+    <div class="stat">
 
-<div class="stat"><span class="label">SKOR</span><span class="value" id="score">0</span></div>
+      <span class="label">LEVEL</span>
 
-<div class="stat"><span class="label">NYAWA</span><span class="value" id="lives">❤️❤️❤️</span></div>
+      <span class="value" id="level">1</span>
 
-</div>
+    </div>
 
-<div class="game-area" id="gameArea">
+    <div class="stat">
 
-<div class="instructions" id="instructions">
+      <span class="label">SKOR</span>
 
-📦 Ambil barang yang betul. Elak barang salah!
+      <span class="value" id="score">0</span>
 
-</div>
+    </div>
 
-<div class="boss" id="boss">👹</div>
+    <div class="stat">
 
-<div class="boss-bar" id="bossBar">
+      <span class="label">NYAWA</span>
 
-<div class="boss-hp" id="bossHp"></div>
+      <span class="value" id="lives">❤️❤️❤️</span>
 
-</div>
+    </div>
 
-<div class="package" id="package">📦</div>
+  </div>
 
-<div class="wrong-item" id="wrongItem">🗑️</div>
+  <div class="game-area" id="gameArea">
 
-<div class="player" id="player">🧑‍💼</div>
+    <div class="instructions" id="instructions">
 
-</div>
+      📦 Ambil barang yang betul. Elak barang salah!
 
-<div class="controls">
+    </div>
 
-<button class="control" id="left">◀</button>
+    <div class="boss" id="boss">👹</div>
 
-<button class="control" id="right">▶</button>
+    <div class="boss-bar" id="bossBar">
 
-</div>
+      <div class="boss-hp" id="bossHp"></div>
 
-<div class="message" id="message">
+    </div>
 
-Sedia untuk mula!
+    <div class="package" id="package">📦</div>
 
-</div>
+    <div class="wrong-item" id="wrongItem">🗑️</div>
+
+    <div class="player" id="player">🧑‍💼</div>
+
+  </div>
+
+  <div class="controls">
+
+    <button class="control" id="left">
+
+      ◀
+
+    </button>
+
+    <button class="control" id="right">
+
+      ▶
+
+    </button>
+
+  </div>
+
+  <div class="message" id="message">
+
+    Sedia untuk mula!
+
+  </div>
 
 </div>
 
@@ -170,49 +776,49 @@ Sedia untuk mula!
 
 <div class="overlay show" id="startOverlay">
 
-<div class="panel">
+  <div class="panel">
 
-<h2>📦 Operasi Bungkus</h2>
+    <h2>📦 Operasi Bungkus</h2>
 
-<p>Siap untuk operasi?</p>
+    <p>Siap untuk operasi?</p>
 
-<button class="camera-intro-btn" id="cameraIntroBtn">
+    <button class="camera-intro-btn" id="cameraIntroBtn">
 
-📸 AMBIL GAMBAR
+      📸 AMBIL GAMBAR
 
-</button>
+    </button>
 
-<div class="photo-status" id="photoStatus">
+    <div class="photo-status" id="photoStatus">
 
-Ambil gambar muka dahulu.
+      Ambil gambar dahulu.
 
-</div>
+    </div>
 
-<button class="start-btn" id="startBtn" disabled>
+    <button class="start-btn" id="startBtn" disabled>
 
-MULA GAME
+      MULA GAME
 
-</button>
+    </button>
 
-<div class="rank">
+    <div class="rank">
 
-<div class="rank-title">
+      <div class="rank-title">
 
-🏆 RANKING
+        🏆 RANKING
 
-</div>
+      </div>
 
-<div class="rank-row">
+      <div class="rank-row">
 
-<span>🥇 Rekod</span>
+        <span>🥇 Rekod</span>
 
-<strong id="bestScore">0</strong>
+        <strong id="bestScore">0</strong>
 
-</div>
+      </div>
 
-</div>
+    </div>
 
-</div>
+  </div>
 
 </div>
 
@@ -220,271 +826,1800 @@ MULA GAME
 
 <div class="overlay" id="endOverlay">
 
-<div class="panel">
+  <div class="panel">
 
-<h2 id="endTitle">
+    <h2 id="endTitle">
 
-📦 Operasi Tamat!
+      📦 Operasi Tamat!
 
-</h2>
+    </h2>
 
-<p id="endText"></p>
+    <p id="endText"></p>
 
-<button class="start-btn" id="againBtn">
+    <button class="start-btn" id="againBtn">
 
-CUBA LAGI
+      CUBA LAGI
 
-</button>
+    </button>
 
-<div class="rank">
+    <div class="rank">
 
-<div class="rank-title">
+      <div class="rank-title">
 
-🏆 RANKING
+        🏆 RANKING
 
-</div>
+      </div>
 
-<div class="rank-row">
+      <div class="rank-row">
 
-<span>🥇 Rekod</span>
+        <span>🥇 Rekod</span>
 
-<strong id="finalBest">0</strong>
+        <strong id="finalBest">0</strong>
 
-</div>
+      </div>
 
-</div>
+    </div>
 
-</div>
+  </div>
 
 </div>
 
 <audio id="voiceBad" preload="auto">
 
-<source src="Westree Hotel 2.m4a" type="audio/mp4">
+  <source src="Westree Hotel 2.m4a" type="audio/mp4">
 
 </audio>
 
 <audio id="voiceNext" preload="auto">
 
-<source src="Westree Hotel 3.m4a" type="audio/mp4">
+  <source src="Westree Hotel 3.m4a" type="audio/mp4">
 
 </audio>
 
 <audio id="voiceDone" preload="auto">
 
-<source src="Westree Hotel 4.m4a" type="audio/mp4">
+  <source src="Westree Hotel 4.m4a" type="audio/mp4">
 
 </audio>
 
 <audio id="voiceTry" preload="auto">
 
-<source src="Westree Hotel 5.m4a" type="audio/mp4">
+  <source src="Westree Hotel 5.m4a" type="audio/mp4">
 
 </audio>
 
 <script>
 
-const gameArea=document.getElementById("gameArea");
+const gameArea =
 
-const player=document.getElementById("player");
+  document.getElementById("gameArea");
 
-const pack=document.getElementById("package");
+const player =
 
-const wrong=document.getElementById("wrongItem");
+  document.getElementById("player");
 
-const levelText=document.getElementById("level");
+const pack =
 
-const scoreText=document.getElementById("score");
+  document.getElementById("package");
 
-const livesText=document.getElementById("lives");
+const wrong =
 
-const message=document.getElementById("message");
+  document.getElementById("wrongItem");
 
-const startOverlay=document.getElementById("startOverlay");
+const levelText =
 
-const endOverlay=document.getElementById("endOverlay");
+  document.getElementById("level");
 
-const startBtn=document.getElementById("startBtn");
+const scoreText =
 
-const againBtn=document.getElementById("againBtn");
+  document.getElementById("score");
 
-const cameraIntroBtn=document.getElementById("cameraIntroBtn");
+const livesText =
 
-const photoStatus=document.getElementById("photoStatus");
+  document.getElementById("lives");
 
-const bestScoreText=document.getElementById("bestScore");
+const message =
 
-const finalBestText=document.getElementById("finalBest");
+  document.getElementById("message");
 
-const voiceBad=document.getElementById("voiceBad");
+const startOverlay =
 
-const voiceNext=document.getElementById("voiceNext");
+  document.getElementById("startOverlay");
 
-const voiceDone=document.getElementById("voiceDone");
+const endOverlay =
 
-const voiceTry=document.getElementById("voiceTry");
+  document.getElementById("endOverlay");
 
-const boss=document.getElementById("boss");
+const startBtn =
 
-const bossBar=document.getElementById("bossBar");
+  document.getElementById("startBtn");
 
-const bossHp=document.getElementById("bossHp");
+const againBtn =
 
-let playerX=50;
+  document.getElementById("againBtn");
 
-let packageX=50;
+const cameraIntroBtn =
 
-let wrongX=30;
+  document.getElementById("cameraIntroBtn");
 
-let packageY=8;
+const photoStatus =
 
-let wrongY=-25;
+  document.getElementById("photoStatus");
 
-let level=1;
+const bestScoreText =
 
-let score=0;
+  document.getElementById("bestScore");
 
-let lives=3;
+const finalBestText =
 
-let running=false;
+  document.getElementById("finalBest");
 
-let lastTime=0;
+const voiceBad =
 
-let packageSpeed=.065;
+  document.getElementById("voiceBad");
 
-let wrongSpeed=.075;
+const voiceNext =
 
-let moveLeft=false;
+  document.getElementById("voiceNext");
 
-let moveRight=false;
+const voiceDone =
 
-let playerPhotoTaken=false;
+  document.getElementById("voiceDone");
 
-let bossActive=false;
+const voiceTry =
 
-let bossHealth=100;
+  document.getElementById("voiceTry");
 
-let bossX=50;
+const boss =
 
-const wrongTypes=[
+  document.getElementById("boss");
 
-"🗑️",
+const bossBar =
 
-"💣",
+  document.getElementById("bossBar");
 
-"🧱",
+const bossHp =
 
-"🥫"
+  document.getElementById("bossHp");
+
+let playerX = 50;
+
+let packageX = 50;
+
+let wrongX = 30;
+
+let packageY = 8;
+
+let wrongY = -25;
+
+let level = 1;
+
+let score = 0;
+
+let lives = 3;
+
+let running = false;
+
+let lastTime = 0;
+
+let packageSpeed = 0.065;
+
+let wrongSpeed = 0.075;
+
+let moveLeft = false;
+
+let moveRight = false;
+
+let playerPhotoTaken = false;
+
+let bossActive = false;
+
+let bossHealth = 100;
+
+let bossX = 50;
+
+const wrongTypes = [
+
+  "🗑️",
+
+  "💣",
+
+  "🧱",
+
+  "🥫"
 
 ];
 
-let wrongTypeIndex=0;
+let wrongTypeIndex = 0;
 
-let bestScore=
+let bestScore =
 
-Number(
+  Number(
 
-localStorage.getItem("operasiBungkusBest")||0
+    localStorage.getItem(
 
-);
+      "operasiBungkusBest"
 
-bestScoreText.textContent=bestScore;
+    ) || 0
+
+  );
+
+bestScoreText.textContent =
+
+  bestScore;
+
+/* VOICE */
 
 function playVoice(audio){
 
-try{
+  try{
 
-audio.currentTime=0;
+    audio.currentTime = 0;
 
-audio.play().catch(()=>{});
+    audio.play().catch(
 
-}catch(e){}
+      () => {}
+
+    );
+
+  }catch(e){}
 
 }
+
+/* KACING */
 
 function kacing(){
 
-try{
+  try{
 
-const AudioContext=
+    const AudioContext =
 
-window.AudioContext||
+      window.AudioContext ||
 
-window.webkitAudioContext;
+      window.webkitAudioContext;
 
-const ctx=new AudioContext();
+    const ctx =
 
-const o1=ctx.createOscillator();
+      new AudioContext();
 
-const o2=ctx.createOscillator();
+    const o1 =
 
-const g=ctx.createGain();
+      ctx.createOscillator();
 
-o1.type="triangle";
+    const o2 =
 
-o2.type="sine";
+      ctx.createOscillator();
 
-o1.frequency.value=900;
+    const g =
 
-o2.frequency.value=1400;
+      ctx.createGain();
 
-g.gain.setValueAtTime(
+    o1.type = "triangle";
 
-0.0001,
+    o2.type = "sine";
 
-ctx.currentTime
+    o1.frequency.value = 900;
 
-);
+    o2.frequency.value = 1400;
 
-g.gain.exponentialRampToValueAtTime(
+    g.gain.setValueAtTime(
 
-0.28,
+      0.0001,
 
-ctx.currentTime+.02
+      ctx.currentTime
 
-);
+    );
 
-g.gain.exponentialRampToValueAtTime(
+    g.gain.exponentialRampToValueAtTime(
 
-0.0001,
+      0.28,
 
-ctx.currentTime+.35
+      ctx.currentTime + 0.02
 
-);
+    );
 
-o1.connect(g);
+    g.gain.exponentialRampToValueAtTime(
 
-o2.connect(g);
+      0.0001,
 
-g.connect(ctx.destination);
+      ctx.currentTime + 0.35
 
-o1.start();
+    );
 
-o2.start();
+    o1.connect(g);
 
-o1.stop(ctx.currentTime+.35);
+    o2.connect(g);
 
-o2.stop(ctx.currentTime+.35);
+    g.connect(
 
-}catch(e){}
+      ctx.destination
+
+    );
+
+    o1.start();
+
+    o2.start();
+
+    o1.stop(
+
+      ctx.currentTime + 0.35
+
+    );
+
+    o2.stop(
+
+      ctx.currentTime + 0.35
+
+    );
+
+  }catch(e){}
 
 }
 
-let musicTimer=null;
+/* MUSIC */
 
-let musicCtx=null;
+let musicTimer = null;
+
+let musicCtx = null;
 
 function startMusic(){
 
-if(musicTimer)return;
+  if(musicTimer) return;
 
-try{
+  try{
 
-const AudioContext=
+    const AudioContext =
 
-window.AudioContext||
+      window.AudioContext ||
 
-window.webkitAudioContext;
+      window.webkitAudioContext;
 
-musicCtx=new
-  
+    musicCtx =
+
+      new AudioContext();
+
+    const notes = [
+
+      261.63,
+
+      329.63,
+
+      392,
+
+      329.63
+
+    ];
+
+    let i = 0;
+
+    musicTimer =
+
+      setInterval(() => {
+
+        if(!running) return;
+
+        const osc =
+
+          musicCtx.createOscillator();
+
+        const gain =
+
+          musicCtx.createGain();
+
+        osc.type = "sine";
+
+        osc.frequency.value =
+
+          notes[
+
+            i++ % notes.length
+
+          ];
+
+        gain.gain.setValueAtTime(
+
+          0.0001,
+
+          musicCtx.currentTime
+
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+
+          0.025,
+
+          musicCtx.currentTime + 0.02
+
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+
+          0.0001,
+
+          musicCtx.currentTime + 0.35
+
+        );
+
+        osc.connect(gain);
+
+        gain.connect(
+
+          musicCtx.destination
+
+        );
+
+        osc.start();
+
+        osc.stop(
+
+          musicCtx.currentTime + 0.35
+
+        );
+
+      },450);
+
+  }catch(e){}
+
+}
+
+/* SAFE POSITION */
+
+function safeX(){
+
+  return 7 +
+
+    Math.random() * 78;
+
+}
+
+/* PACKAGE */
+
+function resetPackage(){
+
+  packageX =
+
+    safeX();
+
+  packageY = 7;
+
+  pack.style.left =
+
+    packageX + "%";
+
+  pack.style.top =
+
+    packageY + "%";
+
+}
+
+/* WRONG ITEM */
+
+function resetWrong(){
+
+  wrongX =
+
+    safeX();
+
+  wrongY = -18;
+
+  wrongTypeIndex =
+
+    Math.floor(
+
+      Math.random() *
+
+      wrongTypes.length
+
+    );
+
+  wrong.textContent =
+
+    wrongTypes[
+
+      wrongTypeIndex
+
+    ];
+
+  wrong.className =
+
+    "wrong-item";
+
+  if(
+
+    wrongTypeIndex === 1
+
+  ){
+
+    wrong.classList.add(
+
+      "bomb"
+
+    );
+
+  }
+
+  if(
+
+    wrongTypeIndex === 2
+
+  ){
+
+    wrong.classList.add(
+
+      "brick"
+
+    );
+
+  }
+
+  if(
+
+    wrongTypeIndex === 3
+
+  ){
+
+    wrong.classList.add(
+
+      "can"
+
+    );
+
+  }
+
+  wrong.style.left =
+
+    wrongX + "%";
+
+  wrong.style.top =
+
+    wrongY + "%";
+
+}
+
+/* LIVES */
+
+function updateLives(){
+
+  livesText.textContent =
+
+    "❤️".repeat(lives) +
+
+    "🖤".repeat(3-lives);
+
+}
+
+/* COLLISION */
+
+function rectHit(a,b){
+
+  return(
+
+    a.left < b.right &&
+
+    a.right > b.left &&
+
+    a.top < b.bottom &&
+
+    a.bottom > b.top
+
+  );
+
+}
+
+/* START */
+
+function startGame(){
+
+  if(!playerPhotoTaken){
+
+    message.textContent =
+
+      "📸 Ambil gambar dahulu!";
+
+    return;
+
+  }
+
+  level = 1;
+
+  score = 0;
+
+  lives = 3;
+
+  playerX = 50;
+
+  packageSpeed = 0.065;
+
+  wrongSpeed = 0.075;
+
+  running = true;
+
+  bossActive = false;
+
+  bossHealth = 100;
+
+  bossX = 50;
+
+  boss.classList.remove(
+
+    "show"
+
+  );
+
+  bossBar.classList.remove(
+
+    "show"
+
+  );
+
+  bossHp.style.width =
+
+    "100%";
+
+  levelText.textContent =
+
+    level;
+
+  scoreText.textContent =
+
+    score;
+
+  updateLives();
+
+  player.style.left =
+
+    "50%";
+
+  resetPackage();
+
+  resetWrong();
+
+  document.getElementById(
+
+    "instructions"
+
+  ).textContent =
+
+    "📦 Ambil barang yang betul. Elak barang salah!";
+
+  message.textContent =
+
+    "📦 Ambil kotak, elak barang salah!";
+
+  startOverlay.classList.remove(
+
+    "show"
+
+  );
+
+  startMusic();
+
+  lastTime =
+
+    performance.now();
+
+  requestAnimationFrame(
+
+    gameLoop
+
+  );
+
+}
+
+/* GAME LOOP */
+
+function gameLoop(time){
+
+  if(!running) return;
+
+  const delta =
+
+    time - lastTime;
+
+  lastTime = time;
+
+  if(moveLeft){
+
+    playerX -=
+
+      0.10 * delta;
+
+  }
+
+  if(moveRight){
+
+    playerX +=
+
+      0.10 * delta;
+
+  }
+
+  playerX =
+
+    Math.max(
+
+      7,
+
+      Math.min(
+
+        93,
+
+        playerX
+
+      )
+
+    );
+
+  player.style.left =
+
+    playerX + "%";
+
+  packageY +=
+
+    packageSpeed * delta;
+
+  wrongY +=
+
+    wrongSpeed * delta;
+
+  pack.style.left =
+
+    packageX + "%";
+
+  pack.style.top =
+
+    packageY + "%";
+
+  wrong.style.left =
+
+    wrongX + "%";
+
+  wrong.style.top =
+
+    wrongY + "%";
+
+  if(bossActive){
+
+    bossX =
+
+      50 +
+
+      Math.sin(
+
+        time / 500
+
+      ) * 32;
+
+    boss.style.left =
+
+      bossX + "%";
+
+  }
+
+  const playerRect =
+
+    player.getBoundingClientRect();
+
+  const packageRect =
+
+    pack.getBoundingClientRect();
+
+  const wrongRect =
+
+    wrong.getBoundingClientRect();
+
+  /* GOOD ITEM */
+
+  if(
+
+    rectHit(
+
+      playerRect,
+
+      packageRect
+
+    )
+
+  ){
+
+    score += 10;
+
+    scoreText.textContent =
+
+      score;
+
+    kacing();
+
+    message.textContent =
+
+      "✨ KACING! +10";
+
+    resetPackage();
+
+    checkLevel();
+
+  }
+
+  else if(
+
+    packageY > 92
+
+  ){
+
+    lives--;
+
+    updateLives();
+
+    playVoice(
+
+      voiceBad
+
+    );
+
+    message.textContent =
+
+      "Aduh! Kotak terlepas!";
+
+    resetPackage();
+
+    if(lives <= 0){
+
+      gameOver(false);
+
+      return;
+
+    }
+
+  }
+
+  /* WRONG ITEM */
+
+  if(
+
+    rectHit(
+
+      playerRect,
+
+      wrongRect
+
+    )
+
+  ){
+
+    score =
+
+      Math.max(
+
+        0,
+
+        score - 10
+
+      );
+
+    scoreText.textContent =
+
+      score;
+
+    message.textContent =
+
+      "❌ " +
+
+      wrongTypes[
+
+        wrongTypeIndex
+
+      ] +
+
+      " Barang salah! -10";
+
+    resetWrong();
+
+    lives =
+
+      Math.max(
+
+        0,
+
+        lives - 1
+
+      );
+
+    updateLives();
+
+    playVoice(
+
+      voiceBad
+
+    );
+
+    if(lives <= 0){
+
+      gameOver(false);
+
+      return;
+
+    }
+
+  }
+
+  else if(
+
+    wrongY > 92
+
+  ){
+
+    resetWrong();
+
+  }
+
+  /* BOSS */
+
+  if(bossActive){
+
+    if(
+
+      rectHit(
+
+        playerRect,
+
+        boss.getBoundingClientRect()
+
+      )
+
+    ){
+
+      lives--;
+
+      updateLives();
+
+      bossHealth =
+
+        Math.max(
+
+          0,
+
+          bossHealth - 20
+
+        );
+
+      bossHp.style.width =
+
+        bossHealth + "%";
+
+      message.textContent =
+
+        "👹 KENA BOSS!";
+
+      playVoice(
+
+        voiceBad
+
+      );
+
+      playerX = 50;
+
+      if(lives <= 0){
+
+        gameOver(false);
+
+        return;
+
+      }
+
+      if(bossHealth <= 0){
+
+        gameOver(true);
+
+        return;
+
+      }
+
+    }
+
+  }
+
+  requestAnimationFrame(
+
+    gameLoop
+
+  );
+
+}
+
+/* LEVEL */
+
+function checkLevel(){
+
+  const newLevel =
+
+    Math.min(
+
+      5,
+
+      Math.floor(
+
+        score / 50
+
+      ) + 1
+
+    );
+
+  if(
+
+    newLevel > level
+
+  ){
+
+    level =
+
+      newLevel;
+
+    levelText.textContent =
+
+      level;
+
+    packageSpeed =
+
+      0.065 +
+
+      (
+
+        (level - 1) *
+
+        0.014
+
+      );
+
+    wrongSpeed =
+
+      0.075 +
+
+      (
+
+        (level - 1) *
+
+        0.020
+
+      );
+
+    playVoice(
+
+      voiceNext
+
+    );
+
+    if(
+
+      level === 5
+
+    ){
+
+      bossActive = true;
+
+      bossHealth = 100;
+
+      bossHp.style.width =
+
+        "100%";
+
+      boss.classList.add(
+
+        "show"
+
+      );
+
+      bossBar.classList.add(
+
+        "show"
+
+      );
+
+      document.getElementById(
+
+        "instructions"
+
+      ).textContent =
+
+        "👹 BIG BOSS! Ambil 📦, elak semua barang salah & 👹!";
+
+      message.textContent =
+
+        "👹 BIG BOSS MUNCUL!";
+
+    }
+
+    else{
+
+      message.textContent =
+
+        "🚀 Level " +
+
+        level +
+
+        "!";
+
+    }
+
+  }
+
+}
+
+/* GAME OVER */
+
+function gameOver(win){
+
+  running = false;
+
+  if(win){
+
+    playVoice(
+
+      voiceDone
+
+    );
+
+    document.getElementById(
+
+      "endTitle"
+
+    ).textContent =
+
+      "🏆 BOSS KALAH!";
+
+    document.getElementById(
+
+      "endText"
+
+    ).textContent =
+
+      "🎉 Operasi berjaya! Skor kau: " +
+
+      score;
+
+  }
+
+  else{
+
+    playVoice(
+
+      voiceTry
+
+    );
+
+    document.getElementById(
+
+      "endTitle"
+
+    ).textContent =
+
+      "📦 Operasi Tamat!";
+
+    document.getElementById(
+
+      "endText"
+
+    ).textContent =
+
+      "Skor kau: " +
+
+      score +
+
+      " | Level: " +
+
+      level;
+
+  }
+
+  if(
+
+    score > bestScore
+
+  ){
+
+    bestScore =
+
+      score;
+
+    localStorage.setItem(
+
+      "operasiBungkusBest",
+
+      bestScore
+
+    );
+
+    bestScoreText.textContent =
+
+      bestScore;
+
+  }
+
+  finalBestText.textContent =
+
+    bestScore;
+
+  endOverlay.classList.add(
+
+    "show"
+
+  );
+
+}
+
+/* CONTROLS */
+
+function holdButton(
+
+  button,
+
+  direction
+
+){
+
+  const down =
+
+    e => {
+
+      e.preventDefault();
+
+      if(
+
+        direction === "left"
+
+      ){
+
+        moveLeft = true;
+
+      }
+
+      else{
+
+        moveRight = true;
+
+      }
+
+    };
+
+  const up =
+
+    e => {
+
+      e.preventDefault();
+
+      if(
+
+        direction === "left"
+
+      ){
+
+        moveLeft = false;
+
+      }
+
+      else{
+
+        moveRight = false;
+
+      }
+
+    };
+
+  button.addEventListener(
+
+    "pointerdown",
+
+    down
+
+  );
+
+  button.addEventListener(
+
+    "pointerup",
+
+    up
+
+  );
+
+  button.addEventListener(
+
+    "pointercancel",
+
+    up
+
+  );
+
+  button.addEventListener(
+
+    "pointerleave",
+
+    up
+
+  );
+
+}
+
+holdButton(
+
+  document.getElementById("left"),
+
+  "left"
+
+);
+
+holdButton(
+
+  document.getElementById("right"),
+
+  "right"
+
+);
+
+/* BUTTONS */
+
+startBtn.addEventListener(
+
+  "click",
+
+  startGame
+
+);
+
+againBtn.addEventListener(
+
+  "click",
+
+  () => {
+
+    endOverlay.classList.remove(
+
+      "show"
+
+    );
+
+    startGame();
+
+  }
+
+);
+
+/* KEYBOARD */
+
+document.addEventListener(
+
+  "keydown",
+
+  e => {
+
+    if(
+
+      e.key === "ArrowLeft"
+
+    ){
+
+      moveLeft = true;
+
+    }
+
+    if(
+
+      e.key === "ArrowRight"
+
+    ){
+
+      moveRight = true;
+
+    }
+
+  }
+
+);
+
+document.addEventListener(
+
+  "keyup",
+
+  e => {
+
+    if(
+
+      e.key === "ArrowLeft"
+
+    ){
+
+      moveLeft = false;
+
+    }
+
+    if(
+
+      e.key === "ArrowRight"
+
+    ){
+
+      moveRight = false;
+
+    }
+
+  }
+
+);
+
+/* LOAD PLAYER PHOTO */
+
+function loadPlayerPhoto(){
+
+  const savedPhoto =
+
+    localStorage.getItem(
+
+      "operasiBungkusPlayerPhoto"
+
+    );
+
+  if(savedPhoto){
+
+    player.style.backgroundImage =
+
+      "url('" +
+
+      savedPhoto +
+
+      "')";
+
+    player.textContent =
+
+      "";
+
+    playerPhotoTaken =
+
+      true;
+
+    startBtn.disabled =
+
+      false;
+
+    photoStatus.textContent =
+
+      "✅ Gambar player sudah ada.";
+
+  }
+
+}
+
+/* CAMERA */
+
+function openGameCamera(){
+
+  if(
+
+    !navigator.mediaDevices ||
+
+    !navigator.mediaDevices.getUserMedia
+
+  ){
+
+    alert(
+
+      "Camera is not supported on this device/browser."
+
+    );
+
+    return;
+
+  }
+
+  const overlay =
+
+    document.createElement(
+
+      "div"
+
+    );
+
+  overlay.id =
+
+    "cameraOverlay";
+
+  const video =
+
+    document.createElement(
+
+      "video"
+
+    );
+
+  video.autoplay =
+
+    true;
+
+  video.playsInline =
+
+    true;
+
+  video.muted =
+
+    true;
+
+  const capture =
+
+    document.createElement(
+
+      "button"
+
+    );
+
+  capture.textContent =
+
+    "📸 TAKE PHOTO";
+
+  capture.className =
+
+    "camera-action";
+
+  const close =
+
+    document.createElement(
+
+      "button"
+
+    );
+
+  close.textContent =
+
+    "✕ CLOSE";
+
+  close.className =
+
+    "camera-close";
+
+  overlay.append(
+
+    video,
+
+    capture,
+
+    close
+
+  );
+
+  document.body.appendChild(
+
+    overlay
+
+  );
+
+  let stream = null;
+
+  navigator.mediaDevices
+
+    .getUserMedia({
+
+      video:{
+
+        facingMode:"user"
+
+      },
+
+      audio:false
+
+    })
+
+    .then(
+
+      s => {
+
+        stream = s;
+
+        video.srcObject =
+
+          stream;
+
+      }
+
+    )
+
+    .catch(
+
+      () => {
+
+        alert(
+
+          "Camera permission was denied."
+
+        );
+
+        overlay.remove();
+
+      }
+
+    );
+
+  capture.onclick =
+
+    () => {
+
+      if(
+
+        !video.videoWidth ||
+
+        !video.videoHeight
+
+      ){
+
+        alert(
+
+          "Camera is not ready yet."
+
+        );
+
+        return;
+
+      }
+
+      const canvas =
+
+        document.createElement(
+
+          "canvas"
+
+        );
+
+      canvas.width =
+
+        video.videoWidth;
+
+      canvas.height =
+
+        video.videoHeight;
+
+      const ctx =
+
+        canvas.getContext(
+
+          "2d"
+
+        );
+
+      ctx.translate(
+
+        canvas.width,
+
+        0
+
+      );
+
+      ctx.scale(
+
+        -1,
+
+        1
+
+      );
+
+      ctx.drawImage(
+
+        video,
+
+        0,
+
+        0,
+
+        canvas.width,
+
+        canvas.height
+
+      );
+
+      const photo =
+
+        canvas.toDataURL(
+
+          "image/jpeg",
+
+          0.9
+
+        );
+
+      localStorage.setItem(
+
+        "operasiBungkusPlayerPhoto",
+
+        photo
+
+      );
+
+      player.style.backgroundImage =
+
+        "url('" +
+
+        photo +
+
+        "')";
+
+      player.textContent =
+
+        "";
+
+      playerPhotoTaken =
+
+        true;
+
+      startBtn.disabled =
+
+        false;
+
+      photoStatus.textContent =
+
+        "✅ Gambar berjaya diambil!";
+
+      if(stream){
+
+        stream
+
+          .getTracks()
+
+          .forEach(
+
+            track =>
+
+              track.stop()
+
+          );
+
+      }
+
+      overlay.remove();
+
+    };
+
+  close.onclick =
+
+    () => {
+
+      if(stream){
+
+        stream
+
+          .getTracks()
+
+          .forEach(
+
+            track =>
+
+              track.stop()
+
+          );
+
+      }
+
+      overlay.remove();
+
+    };
+
+}
+
+/* CAMERA INTRO */
+
+cameraIntroBtn.addEventListener(
+
+  "click",
+
+  openGameCamera
+
+);
+
+/* LOAD PHOTO */
+
+loadPlayerPhoto();
+
+/* INITIAL */
+
+resetPackage();
+
+resetWrong();
+
+</script>
+
+</body>
+
+</html>
