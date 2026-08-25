@@ -8,9 +8,9 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>Operasi-Bungkus</title>
+<title>Operasi Bungkus</title>
 
 <style>
 
@@ -28,7 +28,11 @@ body {
 
   font-family: Arial, sans-serif;
 
-  background: linear-gradient(#87ceeb, #dff7ff);
+  background: linear-gradient(180deg, #eef6ff, #d9eaff);
+
+  color: #17324d;
+
+  min-height: 100vh;
 
   overflow: hidden;
 
@@ -36,193 +40,157 @@ body {
 
 }
 
-#game {
+.game {
 
-  width: 100vw;
+  width: 100%;
 
-  height: 100vh;
+  max-width: 520px;
 
-  position: relative;
+  min-height: 100vh;
 
-  overflow: hidden;
+  margin: auto;
 
-}
-
-#hud {
-
-  position: absolute;
-
-  top: 10px;
-
-  left: 10px;
-
-  right: 10px;
-
-  z-index: 20;
+  padding: 18px 16px 22px;
 
   display: flex;
 
-  justify-content: space-between;
-
-  gap: 6px;
-
-  flex-wrap: wrap;
+  flex-direction: column;
 
 }
 
-.hudBox {
+.header {
 
-  background: rgba(0,0,0,.72);
+  text-align: center;
 
-  color: white;
+  background: white;
 
-  padding: 8px 12px;
+  border-radius: 20px;
 
-  border-radius: 12px;
+  padding: 14px 12px;
 
-  font-weight: bold;
+  box-shadow: 0 5px 18px rgba(0,0,0,.12);
+
+}
+
+.header h1 {
+
+  margin: 0;
+
+  font-size: 28px;
+
+}
+
+.header p {
+
+  margin: 5px 0 0;
 
   font-size: 14px;
 
 }
 
-#road {
-
-  position: absolute;
-
-  bottom: 0;
-
-  left: 0;
-
-  width: 100%;
-
-  height: 72%;
-
-  background:
-
-    repeating-linear-gradient(
-
-      90deg,
-
-      #444 0px,
-
-      #444 47px,
-
-      #555 48px,
-
-      #555 95px
-
-    );
-
-  border-top: 7px solid #777;
-
-}
-
-#road::after {
-
-  content: "";
-
-  position: absolute;
-
-  left: 50%;
-
-  top: 0;
-
-  width: 8px;
-
-  height: 100%;
-
-  transform: translateX(-50%);
-
-  background: repeating-linear-gradient(
-
-    to bottom,
-
-    #fff 0px,
-
-    #fff 45px,
-
-    transparent 45px,
-
-    transparent 90px
-
-  );
-
-  opacity: .8;
-
-}
-
-#player {
-
-  position: absolute;
-
-  z-index: 10;
-
-  bottom: 12%;
-
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  width: 70px;
-
-  height: 85px;
-
-  text-align: center;
-
-  transition: left .08s linear;
-
-}
-
-#playerFace {
-
-  width: 58px;
-
-  height: 58px;
-
-  margin: auto;
-
-  border-radius: 50%;
-
-  background: #ffcc99;
-
-  border: 4px solid white;
-
-  box-shadow: 0 3px 8px #222;
-
-  overflow: hidden;
+.stats {
 
   display: flex;
 
-  align-items: center;
+  justify-content: space-between;
 
-  justify-content: center;
+  gap: 8px;
 
-  font-size: 40px;
-
-}
-
-#motor {
-
-  font-size: 35px;
-
-  line-height: 30px;
+  margin-top: 12px;
 
 }
 
-.obstacle {
+.stat {
 
-  position: absolute;
+  flex: 1;
 
-  z-index: 8;
+  background: white;
 
-  font-size: 42px;
+  border-radius: 14px;
 
-  width: 60px;
-
-  height: 60px;
+  padding: 9px 5px;
 
   text-align: center;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+
+  font-weight: bold;
+
+}
+
+.label {
+
+  display: block;
+
+  font-size: 11px;
+
+  opacity: .65;
+
+}
+
+.value {
+
+  display: block;
+
+  font-size: 20px;
+
+  margin-top: 2px;
+
+}
+
+.game-area {
+
+  position: relative;
+
+  flex: 1;
+
+  margin-top: 12px;
+
+  min-height: 390px;
+
+  background:
+
+    linear-gradient(#ffffffaa, #ffffffaa),
+
+    repeating-linear-gradient(
+
+      45deg,
+
+      #d9c19a 0,
+
+      #d9c19a 22px,
+
+      #cdb287 22px,
+
+      #cdb287 44px
+
+    );
+
+  border: 5px solid white;
+
+  border-radius: 24px;
+
+  overflow: hidden;
+
+  box-shadow: inset 0 0 20px rgba(0,0,0,.12),
+
+              0 5px 18px rgba(0,0,0,.12);
+
+}
+
+.instructions {
+
+  text-align: center;
+
+  padding: 10px;
+
+  font-weight: bold;
+
+  background: rgba(255,255,255,.85);
+
+  border-radius: 14px;
+
+  margin: 10px;
 
 }
 
@@ -230,281 +198,263 @@ body {
 
   position: absolute;
 
-  z-index: 7;
+  width: 74px;
 
-  font-size: 38px;
+  height: 74px;
 
-  width: 55px;
+  background: #c98a45;
 
-  height: 55px;
+  border: 4px solid #8b5a2b;
 
-  text-align: center;
-
-}
-
-#controls {
-
-  position: absolute;
-
-  bottom: 20px;
-
-  left: 0;
-
-  right: 0;
-
-  z-index: 30;
+  border-radius: 13px;
 
   display: flex;
-
-  justify-content: center;
-
-  gap: 20px;
-
-}
-
-.controlBtn {
-
-  width: 85px;
-
-  height: 65px;
-
-  border: none;
-
-  border-radius: 18px;
-
-  background: rgba(0,0,0,.75);
-
-  color: white;
-
-  font-size: 30px;
-
-  font-weight: bold;
-
-}
-
-.controlBtn:active {
-
-  transform: scale(.92);
-
-}
-
-#menu,
-
-#gameOver,
-
-#levelUp,
-
-#bossScreen {
-
-  position: absolute;
-
-  inset: 0;
-
-  z-index: 100;
-
-  background: rgba(0,0,0,.82);
-
-  color: white;
-
-  display: flex;
-
-  flex-direction: column;
 
   align-items: center;
 
   justify-content: center;
 
-  text-align: center;
+  font-size: 38px;
 
-  padding: 20px;
+  box-shadow: 0 5px 10px rgba(0,0,0,.25);
 
-}
-
-#gameOver,
-
-#levelUp,
-
-#bossScreen {
-
-  display: none;
+  z-index: 5;
 
 }
 
-.title {
+.package::after {
 
-  font-size: 42px;
+  content: "";
 
-  font-weight: 900;
+  position: absolute;
 
-  margin-bottom: 8px;
+  width: 7px;
 
-  color: #ffd700;
+  height: 100%;
 
-  text-shadow: 3px 3px #222;
+  background: #f1d08b;
 
-}
-
-.subtitle {
-
-  font-size: 18px;
-
-  margin-bottom: 20px;
+  opacity: .9;
 
 }
 
-.mainBtn {
+.player {
+
+  position: absolute;
+
+  bottom: 18px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  width: 72px;
+
+  height: 72px;
+
+  border-radius: 50%;
+
+  background: #1976d2;
+
+  border: 5px solid white;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 38px;
+
+  box-shadow: 0 5px 12px rgba(0,0,0,.3);
+
+  z-index: 10;
+
+}
+
+.controls {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 30px;
+
+  margin-top: 14px;
+
+  padding: 0 12px;
+
+}
+
+.control {
+
+  flex: 1;
+
+  height: 76px;
 
   border: none;
 
-  background: #ffcc00;
+  border-radius: 22px;
 
-  color: #111;
+  background: white;
 
-  padding: 15px 28px;
+  color: #17324d;
 
-  border-radius: 15px;
+  font-size: 38px;
+
+  font-weight: bold;
+
+  box-shadow: 0 6px 15px rgba(0,0,0,.18);
+
+  touch-action: none;
+
+  user-select: none;
+
+}
+
+.control:active {
+
+  transform: scale(.94);
+
+  background: #e8f2ff;
+
+}
+
+.message {
+
+  text-align: center;
+
+  min-height: 28px;
+
+  margin-top: 7px;
+
+  font-weight: bold;
+
+  font-size: 16px;
+
+}
+
+.overlay {
+
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(8,25,40,.78);
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 22px;
+
+  z-index: 100;
+
+}
+
+.overlay.show {
+
+  display: flex;
+
+}
+
+.panel {
+
+  width: 100%;
+
+  max-width: 400px;
+
+  background: white;
+
+  border-radius: 25px;
+
+  padding: 28px 22px;
+
+  text-align: center;
+
+  box-shadow: 0 10px 35px rgba(0,0,0,.35);
+
+}
+
+.panel h2 {
+
+  margin-top: 0;
+
+  font-size: 30px;
+
+}
+
+.start-btn {
+
+  width: 100%;
+
+  border: none;
+
+  border-radius: 17px;
+
+  padding: 17px;
+
+  background: #1976d2;
+
+  color: white;
 
   font-size: 20px;
 
   font-weight: bold;
 
-  margin: 7px;
+  margin-top: 12px;
 
 }
 
-.mainBtn:active {
+.rank {
 
-  transform: scale(.95);
+  margin-top: 18px;
 
-}
+  background: #f1f6fa;
 
-#upload {
+  border-radius: 15px;
 
-  display: none;
+  padding: 12px;
 
-}
-
-.uploadBtn {
-
-  display: inline-block;
-
-  background: #2196f3;
-
-  padding: 13px 20px;
-
-  border-radius: 14px;
-
-  font-weight: bold;
-
-  margin: 8px;
+  text-align: left;
 
 }
 
-#boss {
-
-  position: absolute;
-
-  z-index: 50;
-
-  width: 120px;
-
-  height: 120px;
-
-  display: none;
-
-  font-size: 90px;
-
-  text-align: center;
-
-  filter: drop-shadow(0 5px 5px #111);
-
-}
-
-#bossHP {
-
-  position: absolute;
-
-  z-index: 51;
-
-  display: none;
-
-  top: 90px;
-
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  background: #111;
-
-  border: 3px solid white;
-
-  border-radius: 12px;
-
-  padding: 5px 12px;
-
-  color: #ff4444;
-
-  font-weight: bold;
-
-}
-
-#shield {
-
-  position: absolute;
-
-  z-index: 11;
-
-  bottom: 10%;
-
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  width: 95px;
-
-  height: 95px;
-
-  border: 5px solid #00eaff;
-
-  border-radius: 50%;
-
-  display: none;
-
-  opacity: .7;
-
-  box-shadow: 0 0 25px #00eaff;
-
-}
-
-#message {
-
-  position: absolute;
-
-  z-index: 60;
-
-  top: 42%;
-
-  left: 50%;
-
-  transform: translate(-50%, -50%);
-
-  color: white;
-
-  font-size: 28px;
+.rank-title {
 
   font-weight: bold;
 
   text-align: center;
 
-  text-shadow: 3px 3px #000;
-
-  pointer-events: none;
+  margin-bottom: 7px;
 
 }
 
-.hidden {
+.rank-row {
 
-  display: none !important;
+  display: flex;
+
+  justify-content: space-between;
+
+  padding: 5px 2px;
+
+}
+
+@media (max-height: 700px) {
+
+  .game-area {
+
+    min-height: 300px;
+
+  }
+
+  .control {
+
+    height: 65px;
+
+  }
 
 }
 
@@ -514,667 +464,699 @@ body {
 
 <body>
 
-<div id="game">
+<div class="game">
 
-  <div id="hud">
+  <div class="header">
 
-    <div class="hudBox">🎮 LEVEL <span id="level">1</span></div>
+    <h1>📦 Operasi Bungkus</h1>
 
-    <div class="hudBox">⭐ SCORE <span id="score">0</span></div>
-
-    <div class="hudBox">⚡ SPEED <span id="speed">1</span></div>
-
-    <div class="hudBox">🛡️ SHIELD <span id="shieldCount">3</span></div>
+    <p>Tangkap barang sebelum terlepas!</p>
 
   </div>
 
-  <div id="road"></div>
+  <div class="stats">
 
-  <div id="player">
+    <div class="stat">
 
-    <div id="playerFace">🙂</div>
+      <span class="label">LEVEL</span>
 
-    <div id="motor">🏍️</div>
-
-  </div>
-
-  <div id="shield"></div>
-
-  <div id="boss">🐉</div>
-
-  <div id="bossHP">❤️❤️❤️</div>
-
-  <div id="message"></div>
-
-  <div id="controls">
-
-    <button class="controlBtn" id="leftBtn">⬅️</button>
-
-    <button class="controlBtn" id="rightBtn">➡️</button>
-
-  </div>
-
-  <div id="menu">
-
-    <div class="title">📦 OPERASI-BUNGKUS</div>
-
-    <div class="subtitle">
-
-      Misi penghantaran bermula!<br>
-
-      Elakkan halangan dan kumpulkan bungkusan.
+      <span class="value" id="level">1</span>
 
     </div>
 
-    <label class="uploadBtn">
+    <div class="stat">
 
-      📸 Masukkan Kepala Sendiri
+      <span class="label">SKOR</span>
 
-      <input id="upload" type="file" accept="image/*">
-
-    </label>
-
-    <button class="mainBtn" id="startBtn">🚀 MULA GAME</button>
-
-  </div>
-
-  <div id="levelUp">
-
-    <div class="title">🎉 LEVEL UP!</div>
-
-    <div class="subtitle" id="levelText"></div>
-
-    <button class="mainBtn" id="continueBtn">▶️ TERUSKAN</button>
-
-  </div>
-
-  <div id="bossScreen">
-
-    <div class="title">🐉 FINAL BOSS!</div>
-
-    <div class="subtitle">
-
-      Naga besar muncul!<br>
-
-      Tekan naga sebanyak 3 kali untuk mengalahkannya!
+      <span class="value" id="score">0</span>
 
     </div>
 
-    <button class="mainBtn" id="fightBtn">⚔️ LAWAN NAGA</button>
+    <div class="stat">
 
-  </div>
+      <span class="label">NYAWA</span>
 
-  <div id="gameOver">
-
-    <div class="title">💥 GAME OVER</div>
-
-    <div class="subtitle">
-
-      Score: <span id="finalScore">0</span><br>
-
-      Level: <span id="finalLevel">1</span>
+      <span class="value" id="lives">❤️❤️❤️</span>
 
     </div>
 
-    <button class="mainBtn" id="restartBtn">🔄 MAIN SEMULA</button>
+  </div>
+
+  <div class="game-area" id="gameArea">
+
+    <div class="instructions">
+
+      Gerakkan pekerja ↔️ dan ambil 📦
+
+    </div>
+
+    <div class="package" id="package">📦</div>
+
+    <div class="player" id="player">🧑‍💼</div>
+
+  </div>
+
+  <div class="controls">
+
+    <button class="control" id="left">◀</button>
+
+    <button class="control" id="right">▶</button>
+
+  </div>
+
+  <div class="message" id="message">
+
+    Sedia untuk mula!
 
   </div>
 
 </div>
 
+<div class="overlay show" id="startOverlay">
+
+  <div class="panel">
+
+    <h2>📦 Operasi Bungkus</h2>
+
+    <p>Siap untuk operasi?</p>
+
+    <button class="start-btn" id="startBtn">
+
+      MULA GAME
+
+    </button>
+
+    <div class="rank">
+
+      <div class="rank-title">🏆 RANKING</div>
+
+      <div class="rank-row">
+
+        <span>🥇 Rekod</span>
+
+        <strong id="bestScore">0</strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="overlay" id="endOverlay">
+
+  <div class="panel">
+
+    <h2 id="endTitle">🎉 Tahniah!</h2>
+
+    <p id="endText"></p>
+
+    <button class="start-btn" id="againBtn">
+
+      CUBA LAGI
+
+    </button>
+
+    <div class="rank">
+
+      <div class="rank-title">🏆 RANKING</div>
+
+      <div class="rank-row">
+
+        <span>🥇 Rekod</span>
+
+        <strong id="finalBest">0</strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Rakaman suara kau -->
+
+<audio id="voiceBad" preload="auto">
+
+  <source src="Westree Hotel 2.m4a" type="audio/mp4">
+
+</audio>
+
+<audio id="voiceNext" preload="auto">
+
+  <source src="Westree Hotel 3.m4a" type="audio/mp4">
+
+</audio>
+
+<audio id="voiceDone" preload="auto">
+
+  <source src="Westree Hotel 4.m4a" type="audio/mp4">
+
+</audio>
+
+<audio id="voiceTry" preload="auto">
+
+  <source src="Westree Hotel 5.m4a" type="audio/mp4">
+
+</audio>
+
 <script>
 
-let gameRunning = false;
+const gameArea = document.getElementById("gameArea");
+
+const player = document.getElementById("player");
+
+const pack = document.getElementById("package");
+
+const levelText = document.getElementById("level");
+
+const scoreText = document.getElementById("score");
+
+const livesText = document.getElementById("lives");
+
+const message = document.getElementById("message");
+
+const startOverlay = document.getElementById("startOverlay");
+
+const endOverlay = document.getElementById("endOverlay");
+
+const startBtn = document.getElementById("startBtn");
+
+const againBtn = document.getElementById("againBtn");
+
+const bestScoreText = document.getElementById("bestScore");
+
+const finalBestText = document.getElementById("finalBest");
+
+const voiceBad = document.getElementById("voiceBad");
+
+const voiceNext = document.getElementById("voiceNext");
+
+const voiceDone = document.getElementById("voiceDone");
+
+const voiceTry = document.getElementById("voiceTry");
+
+let playerX = 50;
+
+let packageX = 50;
+
+let packageY = 75;
 
 let level = 1;
 
 let score = 0;
 
-let speed = 1;
+let lives = 3;
 
-let shieldCount = 3;
+let running = false;
 
-let playerX = 50;
+let lastTime = 0;
 
-let objects = [];
+let packageSpeed = 0.085;
 
-let spawnTimer;
+let moveLeft = false;
 
-let animationFrame;
+let moveRight = false;
 
-let bossActive = false;
+let bestScore = Number(localStorage.getItem("operasiBungkusBest") || 0);
 
-let bossHP = 3;
+bestScoreText.textContent = bestScore;
 
-let bossX = 50;
+function playVoice(audio) {
 
-let bossY = 20;
+  try {
 
-let bossDirection = 1;
+    audio.currentTime = 0;
 
-const game = document.getElementById("game");
+    audio.play().catch(() => {});
 
-const player = document.getElementById("player");
-
-const playerFace = document.getElementById("playerFace");
-
-const levelDisplay = document.getElementById("level");
-
-const scoreDisplay = document.getElementById("score");
-
-const speedDisplay = document.getElementById("speed");
-
-const shieldDisplay = document.getElementById("shieldCount");
-
-const menu = document.getElementById("menu");
-
-const gameOver = document.getElementById("gameOver");
-
-const levelUp = document.getElementById("levelUp");
-
-const bossScreen = document.getElementById("bossScreen");
-
-const boss = document.getElementById("boss");
-
-const bossHPDisplay = document.getElementById("bossHP");
-
-const shield = document.getElementById("shield");
-
-function updateHUD() {
-
-  levelDisplay.textContent = level;
-
-  scoreDisplay.textContent = score;
-
-  speedDisplay.textContent = speed.toFixed(1);
-
-  shieldDisplay.textContent = shieldCount;
+  } catch(e) {}
 
 }
 
-function movePlayer(direction) {
+/* Bunyi KACING! */
 
-  if (!gameRunning || bossActive) return;
+function kacing() {
 
-  playerX += direction * 7;
+  try {
 
-  if (playerX < 12) playerX = 12;
+    const AudioContext =
 
-  if (playerX > 88) playerX = 88;
+      window.AudioContext || window.webkitAudioContext;
 
-  player.style.left = playerX + "%";
+    const ctx = new AudioContext();
 
-  shield.style.left = playerX + "%";
+    const o1 = ctx.createOscillator();
+
+    const o2 = ctx.createOscillator();
+
+    const g = ctx.createGain();
+
+    o1.type = "triangle";
+
+    o2.type = "sine";
+
+    o1.frequency.value = 900;
+
+    o2.frequency.value = 1400;
+
+    g.gain.setValueAtTime(0.0001, ctx.currentTime);
+
+    g.gain.exponentialRampToValueAtTime(
+
+      0.28,
+
+      ctx.currentTime + 0.02
+
+    );
+
+    g.gain.exponentialRampToValueAtTime(
+
+      0.0001,
+
+      ctx.currentTime + 0.35
+
+    );
+
+    o1.connect(g);
+
+    o2.connect(g);
+
+    g.connect(ctx.destination);
+
+    o1.start();
+
+    o2.start();
+
+    o1.stop(ctx.currentTime + 0.35);
+
+    o2.stop(ctx.currentTime + 0.35);
+
+  } catch(e) {}
 
 }
 
-document.getElementById("leftBtn").addEventListener("touchstart", e => {
+/* Muzik latar ringan */
 
-  e.preventDefault();
+let musicTimer = null;
 
-  movePlayer(-1);
+let musicCtx = null;
 
-});
+function startMusic() {
 
-document.getElementById("rightBtn").addEventListener("touchstart", e => {
+  if (musicTimer) return;
 
-  e.preventDefault();
+  try {
 
-  movePlayer(1);
+    const AudioContext =
 
-});
+      window.AudioContext || window.webkitAudioContext;
 
-document.getElementById("leftBtn").addEventListener("click", () => movePlayer(-1));
+    musicCtx = new AudioContext();
 
-document.getElementById("rightBtn").addEventListener("click", () => movePlayer(1));
+    const notes = [261.63, 329.63, 392.00, 329.63];
 
-document.addEventListener("keydown", e => {
+    let i = 0;
 
-  if (e.key === "ArrowLeft") movePlayer(-1);
+    musicTimer = setInterval(() => {
 
-  if (e.key === "ArrowRight") movePlayer(1);
+      if (!running) return;
 
-});
+      const osc = musicCtx.createOscillator();
 
-document.getElementById("upload").addEventListener("change", function(e) {
+      const gain = musicCtx.createGain();
 
-  const file = e.target.files[0];
+      osc.type = "sine";
 
-  if (!file) return;
+      osc.frequency.value = notes[i % notes.length];
 
-  const reader = new FileReader();
+      gain.gain.setValueAtTime(
 
-  reader.onload = function(event) {
+        0.0001,
 
-    playerFace.innerHTML =
+        musicCtx.currentTime
 
-      `<img src="${event.target.result}"
+      );
 
-      style="width:100%;height:100%;object-fit:cover;">`;
+      gain.gain.exponentialRampToValueAtTime(
 
-  };
+        0.025,
 
-  reader.readAsDataURL(file);
+        musicCtx.currentTime + 0.02
 
-});
+      );
 
-document.getElementById("startBtn").onclick = startGame;
+      gain.gain.exponentialRampToValueAtTime(
+
+        0.0001,
+
+        musicCtx.currentTime + 0.35
+
+      );
+
+      osc.connect(gain);
+
+      gain.connect(musicCtx.destination);
+
+      osc.start();
+
+      osc.stop(musicCtx.currentTime + 0.35);
+
+      i++;
+
+    }, 450);
+
+  } catch(e) {}
+
+}
+
+function resetPackage() {
+
+  packageX = Math.random() * 82 + 9;
+
+  packageY = 8;
+
+  pack.style.left = packageX + "%";
+
+  pack.style.top = packageY + "%";
+
+}
+
+function updateLives() {
+
+  livesText.textContent = "❤️".repeat(lives) +
+
+                          "🖤".repeat(3 - lives);
+
+}
 
 function startGame() {
-
-  menu.style.display = "none";
-
-  gameOver.style.display = "none";
-
-  levelUp.style.display = "none";
 
   level = 1;
 
   score = 0;
 
-  speed = 1;
-
-  shieldCount = 3;
+  lives = 3;
 
   playerX = 50;
 
-  player.style.left = "50%";
+  packageSpeed = 0.085;
 
-  shield.style.left = "50%";
+  running = true;
 
-  objects.forEach(o => o.element.remove());
+  levelText.textContent = level;
 
-  objects = [];
+  scoreText.textContent = score;
 
-  bossActive = false;
+  updateLives();
 
-  updateHUD();
+  player.style.left = playerX + "%";
 
-  gameRunning = true;
+  resetPackage();
 
-  startSpawning();
+  startOverlay.classList.remove("show");
 
-  gameLoop();
+  message.textContent = "📦 Cepat! Ambil barang!";
 
-}
+  startMusic();
 
-function startSpawning() {
+  lastTime = performance.now();
 
-  clearInterval(spawnTimer);
-
-  spawnTimer = setInterval(() => {
-
-    if (!gameRunning || bossActive) return;
-
-    spawnObject();
-
-  }, Math.max(450, 1000 - level * 100));
+  requestAnimationFrame(gameLoop);
 
 }
 
-function spawnObject() {
+function gameLoop(time) {
 
-  const isPackage = Math.random() < 0.38;
+  if (!running) return;
 
-  const element = document.createElement("div");
+  const delta = time - lastTime;
 
-  element.className = isPackage ? "package" : "obstacle";
+  lastTime = time;
 
-  element.textContent = isPackage
+  if (moveLeft) {
 
-    ? ["📦","🎁","🛍️"][Math.floor(Math.random()*3)]
+    playerX -= 0.10 * delta;
 
-    : ["🚧","🪨","🚗","🛵"][Math.floor(Math.random()*4)];
+  }
 
-  const x = 10 + Math.random() * 80;
+  if (moveRight) {
 
-  element.style.left = x + "%";
+    playerX += 0.10 * delta;
 
-  element.style.top = "-70px";
+  }
 
-  game.appendChild(element);
+  playerX = Math.max(7, Math.min(93, playerX));
 
-  objects.push({
+  player.style.left = playerX + "%";
 
-    element: element,
+  packageY += packageSpeed * delta;
 
-    x: x,
+  pack.style.left = packageX + "%";
 
-    y: -70,
+  pack.style.top = packageY + "%";
 
-    type: isPackage ? "package" : "obstacle"
+  const playerRect = player.getBoundingClientRect();
 
-  });
+  const packageRect = pack.getBoundingClientRect();
 
-}
+  const touching =
 
-function gameLoop() {
+    playerRect.left < packageRect.right &&
 
-  if (!gameRunning) return;
+    playerRect.right > packageRect.left &&
 
-  objects.forEach((obj, index) => {
+    playerRect.top < packageRect.bottom &&
 
-    obj.y += 3 + speed * 1.5;
+    playerRect.bottom > packageRect.top;
 
-    obj.element.style.top = obj.y + "px";
+  if (touching) {
 
-    const playerRect = player.getBoundingClientRect();
+    score += 10;
 
-    const objectRect = obj.element.getBoundingClientRect();
+    scoreText.textContent = score;
 
-    if (
+    kacing();
 
-      objectRect.bottom > playerRect.top + 15 &&
+    message.textContent = "✨ KACING! Barang berjaya dibungkus!";
 
-      objectRect.top < playerRect.bottom &&
+    resetPackage();
 
-      objectRect.right > playerRect.left &&
+    checkLevel();
 
-      objectRect.left < playerRect.right
+  } else if (packageY > 92) {
 
-    ) {
+    lives--;
 
-      if (obj.type === "package") {
+    updateLives();
 
-        score += 10;
+    playVoice(voiceBad);
 
-        showMessage("📦 +10");
+    message.textContent = "Aduh! Barang terlepas!";
 
-        removeObject(index);
+    resetPackage();
 
-        if (score % 100 === 0) {
+    if (lives <= 0) {
 
-          levelUpCheck();
+      gameOver();
 
-        }
-
-      } else {
-
-        if (shieldCount > 0) {
-
-          shieldCount--;
-
-          shield.style.display = "block";
-
-          setTimeout(() => {
-
-            shield.style.display = "none";
-
-          }, 500);
-
-          showMessage("🛡️ SHIELD!");
-
-          removeObject(index);
-
-          updateHUD();
-
-        } else {
-
-          endGame();
-
-        }
-
-      }
+      return;
 
     }
 
-    if (obj.y > window.innerHeight + 100) {
+  }
 
-      removeObject(index);
+  requestAnimationFrame(gameLoop);
+
+}
+
+function checkLevel() {
+
+  const newLevel = Math.min(
+
+    5,
+
+    Math.floor(score / 50) + 1
+
+  );
+
+  if (newLevel > level) {
+
+    level = newLevel;
+
+    levelText.textContent = level;
+
+    /*
+
+      Kelajuan setiap level lebih perlahan
+
+      supaya lebih selesa dimainkan di phone.
+
+    */
+
+    packageSpeed =
+
+      0.065 + ((level - 1) * 0.008);
+
+    playVoice(voiceNext);
+
+    message.textContent =
+
+      "🚀 Level " + level + "!";
+
+    if (level === 5) {
+
+      playVoice(voiceDone);
 
     }
 
-  });
-
-  animationFrame = requestAnimationFrame(gameLoop);
-
-}
-
-function removeObject(index) {
-
-  if (!objects[index]) return;
-
-  objects[index].element.remove();
-
-  objects.splice(index, 1);
-
-}
-
-function showMessage(text) {
-
-  const message = document.getElementById("message");
-
-  message.textContent = text;
-
-  setTimeout(() => {
-
-    message.textContent = "";
-
-  }, 600);
-
-}
-
-function levelUpCheck() {
-
-  if (level >= 5) {
-
-    startBoss();
-
-    return;
-
-  }
-
-  level++;
-
-  speed += 0.7;
-
-  updateHUD();
-
-  gameRunning = false;
-
-  clearInterval(spawnTimer);
-
-  document.getElementById("levelText").textContent =
-
-    "Tahniah! Anda telah sampai Level " + level +
-
-    ". Kelajuan semakin pantas!";
-
-  levelUp.style.display = "flex";
-
-}
-
-document.getElementById("continueBtn").onclick = function() {
-
-  levelUp.style.display = "none";
-
-  gameRunning = true;
-
-  startSpawning();
-
-  gameLoop();
-
-};
-
-function startBoss() {
-
-  gameRunning = false;
-
-  clearInterval(spawnTimer);
-
-  objects.forEach(o => o.element.remove());
-
-  objects = [];
-
-  bossScreen.style.display = "flex";
-
-}
-
-document.getElementById("fightBtn").onclick = function() {
-
-  bossScreen.style.display = "none";
-
-  bossActive = true;
-
-  bossHP = 3;
-
-  boss.style.display = "block";
-
-  bossHPDisplay.style.display = "block";
-
-  updateBossHP();
-
-  bossX = 50;
-
-  bossY = 18;
-
-  bossDirection = 1;
-
-  boss.style.left = bossX + "%";
-
-  boss.style.top = bossY + "%";
-
-  gameRunning = true;
-
-  bossLoop();
-
-};
-
-function updateBossHP() {
-
-  bossHPDisplay.textContent =
-
-    "❤️".repeat(bossHP);
-
-}
-
-boss.addEventListener("click", hitBoss);
-
-boss.addEventListener("touchstart", function(e) {
-
-  e.preventDefault();
-
-  hitBoss();
-
-});
-
-function hitBoss() {
-
-  if (!bossActive) return;
-
-  bossHP--;
-
-  updateBossHP();
-
-  showMessage("⚔️ HIT!");
-
-  boss.style.transform = "scale(1.3)";
-
-  setTimeout(() => {
-
-    boss.style.transform = "scale(1)";
-
-  }, 120);
-
-  if (bossHP <= 0) {
-
-    bossDefeated();
-
   }
 
 }
 
-function bossLoop() {
+function gameOver() {
 
-  if (!bossActive) return;
+  running = false;
 
-  bossX += bossDirection * 0.7;
+  playVoice(voiceTry);
 
-  if (bossX > 82) {
+  if (score > bestScore) {
 
-    bossDirection = -1;
+    bestScore = score;
 
-  }
+    localStorage.setItem(
 
-  if (bossX < 8) {
+      "operasiBungkusBest",
 
-    bossDirection = 1;
-
-  }
-
-  bossY =
-
-    15 +
-
-    Math.sin(Date.now() / 500) * 7;
-
-  boss.style.left = bossX + "%";
-
-  boss.style.top = bossY + "%";
-
-  animationFrame = requestAnimationFrame(bossLoop);
-
-}
-
-function bossDefeated() {
-
-  bossActive = false;
-
-  gameRunning = false;
-
-  boss.style.display = "none";
-
-  bossHPDisplay.style.display = "none";
-
-  score += 500;
-
-  updateHUD();
-
-  setTimeout(() => {
-
-    alert(
-
-      "🏆 TAHNIAH!\n\n" +
-
-      "Naga telah dikalahkan!\n" +
-
-      "Operasi-Bungkus berjaya!\n\n" +
-
-      "Score: " + score
+      bestScore
 
     );
 
-    location.reload();
+    bestScoreText.textContent = bestScore;
 
-  }, 300);
+  }
 
-}
+  finalBestText.textContent = bestScore;
 
-function endGame() {
+  document.getElementById("endTitle").textContent =
 
-  gameRunning = false;
+    "📦 Operasi Tamat!";
 
-  clearInterval(spawnTimer);
+  document.getElementById("endText").textContent =
 
-  cancelAnimationFrame(animationFrame);
+    "Skor kau: " + score +
 
-  document.getElementById("finalScore").textContent = score;
+    " | Level: " + level;
 
-  document.getElementById("finalLevel").textContent = level;
-
-  gameOver.style.display = "flex";
+  endOverlay.classList.add("show");
 
 }
 
-document.getElementById("restartBtn").onclick = function() {
+function holdButton(button, direction) {
 
-  gameOver.style.display = "none";
+  const down = (e) => {
+
+    e.preventDefault();
+
+    if (direction === "left") {
+
+      moveLeft = true;
+
+    } else {
+
+      moveRight = true;
+
+    }
+
+  };
+
+  const up = (e) => {
+
+    e.preventDefault();
+
+    if (direction === "left") {
+
+      moveLeft = false;
+
+    } else {
+
+      moveRight = false;
+
+    }
+
+  };
+
+  button.addEventListener("pointerdown", down);
+
+  button.addEventListener("pointerup", up);
+
+  button.addEventListener("pointercancel", up);
+
+  button.addEventListener("pointerleave", up);
+
+}
+
+holdButton(
+
+  document.getElementById("left"),
+
+  "left"
+
+);
+
+holdButton(
+
+  document.getElementById("right"),
+
+  "right"
+
+);
+
+startBtn.addEventListener("click", startGame);
+
+againBtn.addEventListener("click", () => {
+
+  endOverlay.classList.remove("show");
 
   startGame();
 
-};
+});
 
-updateHUD();
+document.addEventListener("keydown", (e) => {
+
+  if (e.key === "ArrowLeft") {
+
+    moveLeft = true;
+
+  }
+
+  if (e.key === "ArrowRight") {
+
+    moveRight = true;
+
+  }
+
+});
+
+document.addEventListener("keyup", (e) => {
+
+  if (e.key === "ArrowLeft") {
+
+    moveLeft = false;
+
+  }
+
+  if (e.key === "ArrowRight") {
+
+    moveRight = false;
+
+  }
+
+});
+
+resetPackage();
 
 </script>
 
