@@ -4,8 +4,6 @@
 
 <head>
 
-  
-
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -172,9 +170,11 @@ body {
 
   overflow: hidden;
 
-  box-shadow: inset 0 0 20px rgba(0,0,0,.12),
+  box-shadow:
 
-              0 5px 18px rgba(0,0,0,.12);
+    inset 0 0 20px rgba(0,0,0,.12),
+
+    0 5px 18px rgba(0,0,0,.12);
 
 }
 
@@ -269,6 +269,12 @@ body {
   box-shadow: 0 5px 12px rgba(0,0,0,.3);
 
   z-index: 10;
+
+  background-size: cover;
+
+  background-position: center;
+
+  overflow: hidden;
 
 }
 
@@ -442,6 +448,110 @@ body {
 
 }
 
+#cameraButton {
+
+  position: fixed;
+
+  bottom: 20px;
+
+  right: 20px;
+
+  z-index: 9998;
+
+  padding: 12px 18px;
+
+  border: 0;
+
+  border-radius: 25px;
+
+  background: #222;
+
+  color: #fff;
+
+  font-size: 16px;
+
+  font-weight: bold;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+
+}
+
+#cameraOverlay {
+
+  position: fixed;
+
+  inset: 0;
+
+  background: #000;
+
+  z-index: 99999;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+}
+
+#cameraOverlay video {
+
+  width: 100%;
+
+  max-width: 420px;
+
+  max-height: 70vh;
+
+  object-fit: cover;
+
+  border-radius: 20px;
+
+  transform: scaleX(-1);
+
+}
+
+.camera-action {
+
+  margin-top: 20px;
+
+  padding: 14px 28px;
+
+  border: 0;
+
+  border-radius: 30px;
+
+  background: white;
+
+  color: #111;
+
+  font-size: 18px;
+
+  font-weight: bold;
+
+}
+
+.camera-close {
+
+  margin-top: 10px;
+
+  padding: 10px 22px;
+
+  border: 0;
+
+  border-radius: 20px;
+
+  background: #333;
+
+  color: white;
+
+  font-size: 15px;
+
+}
+
 @media (max-height: 700px) {
 
   .game-area {
@@ -596,8 +706,6 @@ body {
 
 </div>
 
-<!-- Rakaman suara kau -->
-
 <audio id="voiceBad" preload="auto">
 
   <source src="Westree Hotel 2.m4a" type="audio/mp4">
@@ -680,9 +788,13 @@ let moveLeft = false;
 
 let moveRight = false;
 
-let bestScore = Number(localStorage.getItem("operasiBungkusBest") || 0);
+let bestScore =
+
+  Number(localStorage.getItem("operasiBungkusBest") || 0);
 
 bestScoreText.textContent = bestScore;
+
+/* VOICE */
 
 function playVoice(audio) {
 
@@ -696,7 +808,7 @@ function playVoice(audio) {
 
 }
 
-/* Bunyi KACING! */
+/* KACING */
 
 function kacing() {
 
@@ -704,7 +816,9 @@ function kacing() {
 
     const AudioContext =
 
-      window.AudioContext || window.webkitAudioContext;
+      window.AudioContext ||
+
+      window.webkitAudioContext;
 
     const ctx = new AudioContext();
 
@@ -722,7 +836,13 @@ function kacing() {
 
     o2.frequency.value = 1400;
 
-    g.gain.setValueAtTime(0.0001, ctx.currentTime);
+    g.gain.setValueAtTime(
+
+      0.0001,
+
+      ctx.currentTime
+
+    );
 
     g.gain.exponentialRampToValueAtTime(
 
@@ -758,7 +878,7 @@ function kacing() {
 
 }
 
-/* Muzik latar ringan */
+/* BACKGROUND MUSIC */
 
 let musicTimer = null;
 
@@ -772,11 +892,23 @@ function startMusic() {
 
     const AudioContext =
 
-      window.AudioContext || window.webkitAudioContext;
+      window.AudioContext ||
+
+      window.webkitAudioContext;
 
     musicCtx = new AudioContext();
 
-    const notes = [261.63, 329.63, 392.00, 329.63];
+    const notes = [
+
+      261.63,
+
+      329.63,
+
+      392.00,
+
+      329.63
+
+    ];
 
     let i = 0;
 
@@ -790,7 +922,9 @@ function startMusic() {
 
       osc.type = "sine";
 
-      osc.frequency.value = notes[i % notes.length];
+      osc.frequency.value =
+
+        notes[i % notes.length];
 
       gain.gain.setValueAtTime(
 
@@ -822,7 +956,11 @@ function startMusic() {
 
       osc.start();
 
-      osc.stop(musicCtx.currentTime + 0.35);
+      osc.stop(
+
+        musicCtx.currentTime + 0.35
+
+      );
 
       i++;
 
@@ -832,25 +970,39 @@ function startMusic() {
 
 }
 
+/* PACKAGE */
+
 function resetPackage() {
 
-  packageX = Math.random() * 82 + 9;
+  packageX =
+
+    Math.random() * 82 + 9;
 
   packageY = 8;
 
-  pack.style.left = packageX + "%";
+  pack.style.left =
 
-  pack.style.top = packageY + "%";
+    packageX + "%";
+
+  pack.style.top =
+
+    packageY + "%";
 
 }
+
+/* LIVES */
 
 function updateLives() {
 
-  livesText.textContent = "❤️".repeat(lives) +
+  livesText.textContent =
 
-                          "🖤".repeat(3 - lives);
+    "❤️".repeat(lives) +
+
+    "🖤".repeat(3 - lives);
 
 }
+
+/* START */
 
 function startGame() {
 
@@ -872,27 +1024,37 @@ function startGame() {
 
   updateLives();
 
-  player.style.left = playerX + "%";
+  player.style.left =
+
+    playerX + "%";
 
   resetPackage();
 
   startOverlay.classList.remove("show");
 
-  message.textContent = "📦 Cepat! Ambil barang!";
+  message.textContent =
+
+    "📦 Cepat! Ambil barang!";
 
   startMusic();
 
-  lastTime = performance.now();
+  lastTime =
+
+    performance.now();
 
   requestAnimationFrame(gameLoop);
 
 }
 
+/* GAME LOOP */
+
 function gameLoop(time) {
 
   if (!running) return;
 
-  const delta = time - lastTime;
+  const delta =
+
+    time - lastTime;
 
   lastTime = time;
 
@@ -908,19 +1070,39 @@ function gameLoop(time) {
 
   }
 
-  playerX = Math.max(7, Math.min(93, playerX));
+  playerX =
 
-  player.style.left = playerX + "%";
+    Math.max(
 
-  packageY += packageSpeed * delta;
+      7,
 
-  pack.style.left = packageX + "%";
+      Math.min(93, playerX)
 
-  pack.style.top = packageY + "%";
+    );
 
-  const playerRect = player.getBoundingClientRect();
+  player.style.left =
 
-  const packageRect = pack.getBoundingClientRect();
+    playerX + "%";
+
+  packageY +=
+
+    packageSpeed * delta;
+
+  pack.style.left =
+
+    packageX + "%";
+
+  pack.style.top =
+
+    packageY + "%";
+
+  const playerRect =
+
+    player.getBoundingClientRect();
+
+  const packageRect =
+
+    pack.getBoundingClientRect();
 
   const touching =
 
@@ -936,17 +1118,23 @@ function gameLoop(time) {
 
     score += 10;
 
-    scoreText.textContent = score;
+    scoreText.textContent =
+
+      score;
 
     kacing();
 
-    message.textContent = "✨ KACING! Barang berjaya dibungkus!";
+    message.textContent =
+
+      "✨ KACING! Barang berjaya dibungkus!";
 
     resetPackage();
 
     checkLevel();
 
-  } else if (packageY > 92) {
+  }
+
+  else if (packageY > 92) {
 
     lives--;
 
@@ -954,7 +1142,9 @@ function gameLoop(time) {
 
     playVoice(voiceBad);
 
-    message.textContent = "Aduh! Barang terlepas!";
+    message.textContent =
+
+      "Aduh! Barang terlepas!";
 
     resetPackage();
 
@@ -972,33 +1162,33 @@ function gameLoop(time) {
 
 }
 
+/* LEVEL */
+
 function checkLevel() {
 
-  const newLevel = Math.min(
+  const newLevel =
 
-    5,
+    Math.min(
 
-    Math.floor(score / 50) + 1
+      5,
 
-  );
+      Math.floor(score / 50) + 1
+
+    );
 
   if (newLevel > level) {
 
     level = newLevel;
 
-    levelText.textContent = level;
+    levelText.textContent =
 
-    /*
-
-      Kelajuan setiap level lebih perlahan
-
-      supaya lebih selesa dimainkan di phone.
-
-    */
+      level;
 
     packageSpeed =
 
-      0.065 + ((level - 1) * 0.008);
+      0.065 +
+
+      ((level - 1) * 0.008);
 
     playVoice(voiceNext);
 
@@ -1015,6 +1205,8 @@ function checkLevel() {
   }
 
 }
+
+/* GAME OVER */
 
 function gameOver() {
 
@@ -1034,25 +1226,43 @@ function gameOver() {
 
     );
 
-    bestScoreText.textContent = bestScore;
+    bestScoreText.textContent =
+
+      bestScore;
 
   }
 
-  finalBestText.textContent = bestScore;
+  finalBestText.textContent =
 
-  document.getElementById("endTitle").textContent =
+    bestScore;
+
+  document.getElementById(
+
+    "endTitle"
+
+  ).textContent =
 
     "📦 Operasi Tamat!";
 
-  document.getElementById("endText").textContent =
+  document.getElementById(
 
-    "Skor kau: " + score +
+    "endText"
 
-    " | Level: " + level;
+  ).textContent =
+
+    "Skor kau: " +
+
+    score +
+
+    " | Level: " +
+
+    level;
 
   endOverlay.classList.add("show");
 
 }
+
+/* CONTROLS */
 
 function holdButton(button, direction) {
 
@@ -1088,13 +1298,37 @@ function holdButton(button, direction) {
 
   };
 
-  button.addEventListener("pointerdown", down);
+  button.addEventListener(
 
-  button.addEventListener("pointerup", up);
+    "pointerdown",
 
-  button.addEventListener("pointercancel", up);
+    down
 
-  button.addEventListener("pointerleave", up);
+  );
+
+  button.addEventListener(
+
+    "pointerup",
+
+    up
+
+  );
+
+  button.addEventListener(
+
+    "pointercancel",
+
+    up
+
+  );
+
+  button.addEventListener(
+
+    "pointerleave",
+
+    up
+
+  );
 
 }
 
@@ -1114,66 +1348,133 @@ holdButton(
 
 );
 
-startBtn.addEventListener("click", startGame);
+/* BUTTONS */
 
-againBtn.addEventListener("click", () => {
+startBtn.addEventListener(
 
-  endOverlay.classList.remove("show");
+  "click",
 
-  startGame();
+  startGame
 
-});
+);
 
-document.addEventListener("keydown", (e) => {
+againBtn.addEventListener(
 
-  if (e.key === "ArrowLeft") {
+  "click",
 
-    moveLeft = true;
+  () => {
 
-  }
+    endOverlay.classList.remove("show");
 
-  if (e.key === "ArrowRight") {
-
-    moveRight = true;
+    startGame();
 
   }
 
-});
+);
 
-document.addEventListener("keyup", (e) => {
+/* KEYBOARD */
 
-  if (e.key === "ArrowLeft") {
+document.addEventListener(
 
-    moveLeft = false;
+  "keydown",
+
+  (e) => {
+
+    if (e.key === "ArrowLeft") {
+
+      moveLeft = true;
+
+    }
+
+    if (e.key === "ArrowRight") {
+
+      moveRight = true;
+
+    }
 
   }
 
-  if (e.key === "ArrowRight") {
+);
 
-    moveRight = false;
+document.addEventListener(
+
+  "keyup",
+
+  (e) => {
+
+    if (e.key === "ArrowLeft") {
+
+      moveLeft = false;
+
+    }
+
+    if (e.key === "ArrowRight") {
+
+      moveRight = false;
+
+    }
 
   }
 
-});
-playPickupSound();
-resetPackage();
-  function playPickupSound() {
+);
 
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+/* PICKUP SOUND */
 
-    const osc = audioCtx.createOscillator();
+function playPickupSound() {
 
-    const gain = audioCtx.createGain();
+  try {
+
+    const audioCtx =
+
+      new (
+
+        window.AudioContext ||
+
+        window.webkitAudioContext
+
+      )();
+
+    const osc =
+
+      audioCtx.createOscillator();
+
+    const gain =
+
+      audioCtx.createGain();
 
     osc.type = "sine";
 
-    osc.frequency.setValueAtTime(900, audioCtx.currentTime);
+    osc.frequency.setValueAtTime(
 
-    osc.frequency.exponentialRampToValueAtTime(1600, audioCtx.currentTime + 0.08);
+      900,
 
-    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+      audioCtx.currentTime
 
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+    );
+
+    osc.frequency.exponentialRampToValueAtTime(
+
+      1600,
+
+      audioCtx.currentTime + 0.08
+
+    );
+
+    gain.gain.setValueAtTime(
+
+      0.25,
+
+      audioCtx.currentTime
+
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+
+      0.01,
+
+      audioCtx.currentTime + 0.15
+
+    );
 
     osc.connect(gain);
 
@@ -1181,269 +1482,73 @@ resetPackage();
 
     osc.start();
 
-    osc.stop(audioCtx.currentTime + 0.15);
+    osc.stop(
+
+      audioCtx.currentTime + 0.15
+
+    );
+
+  } catch(e) {}
 
 }
-// CAMERA FEATURE
+
+/* PLAYER PHOTO */
+
+function loadPlayerPhoto() {
+
+  const savedPhoto =
+
+    localStorage.getItem(
+
+      "operasiBungkusPlayerPhoto"
+
+    );
+
+  if (savedPhoto) {
+
+    player.style.backgroundImage =
+
+      "url('" + savedPhoto + "')";
+
+    player.textContent = "";
+
+  }
+
+}
+
+/* CAMERA */
 
 function openGameCamera() {
 
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+  if (
 
-        alert("Camera is not supported on this device/browser.");
+    !navigator.mediaDevices ||
 
-        return;
+    !navigator.mediaDevices.getUserMedia
 
-    }
+  ) {
 
-    const overlay = document.createElement("div");
+    alert(
 
-    overlay.id = "cameraOverlay";
+      "Camera is not supported on this device/browser."
 
-    overlay.style.cssText = `
+    );
 
-        position:fixed;
+    return;
 
-        inset:0;
+  }
 
-        background:#000;
+  const overlay =
 
-        z-index:99999;
+    document.createElement("div");
 
-        display:flex;
+  overlay.id =
 
-        flex-direction:column;
+    "cameraOverlay";
 
-        align-items:center;
+  const video =
 
-        justify-content:center;
-
-    `;
-
-    const video = document.createElement("video");
-
-    video.autoplay = true;
-
-    video.playsInline = true;
-
-    video.style.cssText = `
-
-        width:100%;
-
-        max-height:75vh;
-
-        object-fit:cover;
-
-    `;
-
-    const captureBtn = document.createElement("button");
-
-    captureBtn.textContent = "📸 TAKE PHOTO";
-
-    captureBtn.style.cssText = `
-
-        margin-top:20px;
-
-        padding:14px 28px;
-
-        border:0;
-
-        border-radius:30px;
-
-        background:#fff;
-
-        color:#111;
-
-        font-size:18px;
-
-        font-weight:bold;
-
-    `;
-
-    const closeBtn = document.createElement("button");
-
-    closeBtn.textContent = "✕ CLOSE";
-
-    closeBtn.style.cssText = `
-
-        margin-top:10px;
-
-        padding:10px 22px;
-
-        border:0;
-
-        border-radius:20px;
-
-        background:#333;
-
-        color:#fff;
-
-        font-size:15px;
-
-    `;
-
-    overlay.appendChild(video);
-
-    overlay.appendChild(captureBtn);
-
-    overlay.appendChild(closeBtn);
-
-    document.body.appendChild(overlay);
-
-    let stream;
-
-    navigator.mediaDevices.getUserMedia({
-
-        video: {
-
-            facingMode: "environment"
-
-        },
-
-        audio: false
-
-    }).then(cameraStream => {
-
-        stream = cameraStream;
-
-        video.srcObject = stream;
-
-    }).catch(error => {
-
-        alert("Camera permission was denied.");
-
-        overlay.remove();
-
-    });
-
-    captureBtn.onclick = function() {
-
-        const canvas = document.createElement("canvas");
-
-        canvas.width = video.videoWidth;
-
-        canvas.height = video.videoHeight;
-
-        const ctx = canvas.getContext("2d");
-
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        const photo = canvas.toDataURL("image/jpeg", 0.9);
-
-        const link = document.createElement("a");
-
-        link.href = photo;
-
-        link.download = "Operasi-Bungkus-Photo.jpg";
-
-        link.click();
-
-    };
-
-    closeBtn.onclick = function() {
-
-        if (stream) {
-
-            stream.getTracks().forEach(track => track.stop());
-
-        }
-
-        overlay.remove();
-
-    };
-
-}
-
-// CAMERA BUTTON
-
-const cameraButton = document.createElement("button");
-
-cameraButton.textContent = "📷 CAMERA";
-
-cameraButton.style.cssText = `
-
-    position:fixed;
-
-    bottom:20px;
-
-    right:20px;
-
-    z-index:9998;
-
-    padding:12px 18px;
-
-    border:0;
-
-    border-radius:25px;
-
-    background:#222;
-
-    color:#fff;
-
-    font-size:16px;
-
-    font-weight:bold;
-
-    box-shadow:0 4px 12px rgba(0,0,0,0.3);
-
-`;
-
-cameraButton.onclick = openGameCamera;
-
-document.body.appendChild(cameraButton);
-<!-- PLAYER CAMERA -->
-
-<script>
-
-const cameraButton = document.createElement("button");
-
-cameraButton.innerHTML = "📷 CAMERA";
-
-cameraButton.style.position = "fixed";
-
-cameraButton.style.right = "20px";
-
-cameraButton.style.bottom = "90px";
-
-cameraButton.style.zIndex = "9998";
-
-cameraButton.style.padding = "12px 18px";
-
-cameraButton.style.border = "0";
-
-cameraButton.style.borderRadius = "25px";
-
-cameraButton.style.background = "#222";
-
-cameraButton.style.color = "#fff";
-
-cameraButton.style.fontSize = "16px";
-
-cameraButton.style.fontWeight = "bold";
-
-cameraButton.style.boxShadow = "0 4px 12px rgba(0,0,0,0.3)";
-
-async function openGameCamera() {
-
-  const cameraOverlay = document.createElement("div");
-
-  cameraOverlay.style.position = "fixed";
-
-  cameraOverlay.style.inset = "0";
-
-  cameraOverlay.style.background = "#000";
-
-  cameraOverlay.style.zIndex = "99999";
-
-  cameraOverlay.style.display = "flex";
-
-  cameraOverlay.style.flexDirection = "column";
-
-  cameraOverlay.style.alignItems = "center";
-
-  cameraOverlay.style.justifyContent = "center";
-
-  const video = document.createElement("video");
+    document.createElement("video");
 
   video.autoplay = true;
 
@@ -1451,159 +1556,252 @@ async function openGameCamera() {
 
   video.muted = true;
 
-  video.style.width = "90%";
+  const captureBtn =
 
-  video.style.maxWidth = "420px";
+    document.createElement("button");
 
-  video.style.borderRadius = "20px";
+  captureBtn.textContent =
 
-  const captureButton = document.createElement("button");
+    "📸 TAKE PHOTO";
 
-  captureButton.innerHTML = "📸 AMBIL GAMBAR";
+  captureBtn.className =
 
-  captureButton.style.marginTop = "20px";
+    "camera-action";
 
-  captureButton.style.padding = "14px 22px";
+  const closeBtn =
 
-  captureButton.style.border = "0";
+    document.createElement("button");
 
-  captureButton.style.borderRadius = "25px";
+  closeBtn.textContent =
 
-  captureButton.style.fontSize = "17px";
+    "✕ CLOSE";
 
-  captureButton.style.fontWeight = "bold";
+  closeBtn.className =
 
-  const closeButton = document.createElement("button");
+    "camera-close";
 
-  closeButton.innerHTML = "✕ TUTUP";
+  overlay.appendChild(video);
 
-  closeButton.style.marginTop = "12px";
+  overlay.appendChild(captureBtn);
 
-  closeButton.style.padding = "10px 20px";
+  overlay.appendChild(closeBtn);
 
-  closeButton.style.border = "0";
+  document.body.appendChild(overlay);
 
-  closeButton.style.borderRadius = "20px";
+  let stream = null;
 
-  cameraOverlay.appendChild(video);
+  navigator.mediaDevices.getUserMedia({
 
-  cameraOverlay.appendChild(captureButton);
+    video: {
 
-  cameraOverlay.appendChild(closeButton);
+      facingMode: "user"
 
-  document.body.appendChild(cameraOverlay);
+    },
 
-  let stream;
+    audio: false
 
-  try {
+  })
 
-    stream = await navigator.mediaDevices.getUserMedia({
+  .then(cameraStream => {
 
-      video: {
+    stream =
 
-        facingMode: "user"
+      cameraStream;
 
-      },
+    video.srcObject =
 
-      audio: false
+      stream;
 
-    });
+  })
 
-    video.srcObject = stream;
+  .catch(error => {
 
-  } catch (error) {
+    alert(
 
-    alert("Camera access is required to take the player photo.");
+      "Camera permission was denied."
 
-    cameraOverlay.remove();
+    );
 
-    return;
+    overlay.remove();
 
-  }
+  });
 
-  captureButton.onclick = () => {
+  captureBtn.onclick =
 
-    const canvas = document.createElement("canvas");
+    function() {
 
-    canvas.width = video.videoWidth;
+      if (
 
-    canvas.height = video.videoHeight;
+        !video.videoWidth ||
 
-    const ctx = canvas.getContext("2d");
+        !video.videoHeight
 
-    ctx.translate(canvas.width, 0);
+      ) {
 
-    ctx.scale(-1, 1);
+        alert(
 
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          "Camera is not ready yet."
 
-    const photo = canvas.toDataURL("image/jpeg", 0.9);
+        );
 
-    localStorage.setItem("operasiBungkusPlayerPhoto", photo);
+        return;
 
-    const img = document.createElement("img");
+      }
 
-    img.src = photo;
+      const canvas =
 
-    img.style.position = "fixed";
+        document.createElement("canvas");
 
-    img.style.top = "20px";
+      canvas.width =
 
-    img.style.left = "20px";
+        video.videoWidth;
 
-    img.style.width = "70px";
+      canvas.height =
 
-    img.style.height = "70px";
+        video.videoHeight;
 
-    img.style.objectFit = "cover";
+      const ctx =
 
-    img.style.borderRadius = "50%";
+        canvas.getContext("2d");
 
-    img.style.border = "3px solid white";
+      /* Mirror the selfie photo */
 
-    img.style.zIndex = "9997";
+      ctx.translate(
 
-    const oldPhoto = document.getElementById("playerPhoto");
+        canvas.width,
 
-    if (oldPhoto) {
+        0
 
-      oldPhoto.remove();
+      );
 
-    }
+      ctx.scale(-1, 1);
 
-    img.id = "playerPhoto";
+      ctx.drawImage(
 
-    document.body.appendChild(img);
+        video,
 
-    stream.getTracks().forEach(track => track.stop());
+        0,
 
-    cameraOverlay.remove();
+        0,
 
-  };
+        canvas.width,
 
-  closeButton.onclick = () => {
+        canvas.height
 
-    if (stream) {
+      );
 
-      stream.getTracks().forEach(track => track.stop());
+      const photo =
 
-    }
+        canvas.toDataURL(
 
-    cameraOverlay.remove();
+          "image/jpeg",
 
-  };
+          0.9
+
+        );
+
+      /* Save photo */
+
+      localStorage.setItem(
+
+        "operasiBungkusPlayerPhoto",
+
+        photo
+
+      );
+
+      /* Put photo on player */
+
+      player.style.backgroundImage =
+
+        "url('" + photo + "')";
+
+      player.textContent =
+
+        "";
+
+      /* Stop camera */
+
+      if (stream) {
+
+        stream
+
+          .getTracks()
+
+          .forEach(
+
+            track => track.stop()
+
+          );
+
+      }
+
+      overlay.remove();
+
+      message.textContent =
+
+        "📸 Gambar player berjaya diambil!";
+
+    };
+
+  closeBtn.onclick =
+
+    function() {
+
+      if (stream) {
+
+        stream
+
+          .getTracks()
+
+          .forEach(
+
+            track => track.stop()
+
+          );
+
+      }
+
+      overlay.remove();
+
+    };
 
 }
 
-cameraButton.onclick = openGameCamera;
+/* CAMERA BUTTON */
 
-document.body.appendChild(cameraButton);
-  
+const cameraButton =
 
-</script>
+  document.createElement("button");
+
+cameraButton.id =
+
+  "cameraButton";
+
+cameraButton.textContent =
+
+  "📷 CAMERA";
+
+cameraButton.onclick =
+
+  openGameCamera;
+
+document.body.appendChild(
+
+  cameraButton
+
+);
+
+/* LOAD SAVED PLAYER PHOTO */
+
+loadPlayerPhoto();
+
+/* INITIAL PACKAGE */
+
+resetPackage();
+
 </script>
 
 </body>
 
 </html>
-
