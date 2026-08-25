@@ -12,563 +12,93 @@
 
 <style>
 
-* {
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
-  box-sizing: border-box;
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(180deg,#eef6ff,#d9eaff);color:#17324d;min-height:100vh;overflow:hidden;touch-action:manipulation}
 
-  -webkit-tap-highlight-color: transparent;
+.game{width:100%;max-width:520px;min-height:100vh;margin:auto;padding:18px 16px 22px;display:flex;flex-direction:column}
 
-}
+.header{text-align:center;background:white;border-radius:20px;padding:14px 12px;box-shadow:0 5px 18px rgba(0,0,0,.12)}
 
-body {
+.header h1{margin:0;font-size:28px}.header p{margin:5px 0 0;font-size:14px}
 
-  margin: 0;
+.stats{display:flex;justify-content:space-between;gap:8px;margin-top:12px}
 
-  font-family: Arial, sans-serif;
+.stat{flex:1;background:white;border-radius:14px;padding:9px 5px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.08);font-weight:bold}
 
-  background: linear-gradient(180deg, #eef6ff, #d9eaff);
+.label{display:block;font-size:11px;opacity:.65}.value{display:block;font-size:20px;margin-top:2px}
 
-  color: #17324d;
+.game-area{position:relative;flex:1;margin-top:12px;min-height:390px;background:linear-gradient(#ffffffaa,#ffffffaa),repeating-linear-gradient(45deg,#d9c19a 0,#d9c19a 22px,#cdb287 22px,#cdb287 44px);border:5px solid white;border-radius:24px;overflow:hidden;box-shadow:inset 0 0 20px rgba(0,0,0,.12),0 5px 18px rgba(0,0,0,.12)}
 
-  min-height: 100vh;
+.instructions{text-align:center;padding:10px;font-weight:bold;background:rgba(255,255,255,.85);border-radius:14px;margin:10px}
 
-  overflow: hidden;
+.package,.wrong-item{position:absolute;width:64px;height:64px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 5px 10px rgba(0,0,0,.25);z-index:5}
 
-  touch-action: manipulation;
+.package{background:#c98a45;border:4px solid #8b5a2b}
 
-}
+.package:after{content:"";position:absolute;width:7px;height:100%;background:#f1d08b;opacity:.9}
 
-.game {
+.wrong-item{background:#d9534f;border:4px solid #922b27}
 
-  width: 100%;
+.wrong-item.bomb{background:#444;border-color:#111}
 
-  max-width: 520px;
+.wrong-item.brick{background:#9e9e9e;border-color:#666}
 
-  min-height: 100vh;
+.wrong-item.can{background:#8bc34a;border-color:#558b2f}
 
-  margin: auto;
+.player{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);width:72px;height:72px;border-radius:50%;background:#1976d2;border:5px solid white;display:flex;align-items:center;justify-content:center;font-size:38px;box-shadow:0 5px 12px rgba(0,0,0,.3);z-index:10;background-size:cover;background-position:center;overflow:hidden}
 
-  padding: 18px 16px 22px;
+.boss{position:absolute;top:48px;left:50%;transform:translateX(-50%);font-size:72px;z-index:7;display:none;filter:drop-shadow(0 5px 5px rgba(0,0,0,.35))}
 
-  display: flex;
+.boss.show{display:block}
 
-  flex-direction: column;
+.boss-bar{position:absolute;top:10px;left:12%;width:76%;height:16px;background:#222;border-radius:10px;overflow:hidden;z-index:8;display:none}
 
-}
+.boss-bar.show{display:block}
 
-.header {
+.boss-hp{height:100%;width:100%;background:#e53935}
 
-  text-align: center;
+.controls{display:flex;justify-content:space-between;gap:30px;margin-top:14px;padding:0 12px}
 
-  background: white;
+.control{flex:1;height:76px;border:none;border-radius:22px;background:white;color:#17324d;font-size:38px;font-weight:bold;box-shadow:0 6px 15px rgba(0,0,0,.18);touch-action:none;user-select:none}
 
-  border-radius: 20px;
+.control:active{transform:scale(.94);background:#e8f2ff}
 
-  padding: 14px 12px;
+.message{text-align:center;min-height:28px;margin-top:7px;font-weight:bold;font-size:16px}
 
-  box-shadow: 0 5px 18px rgba(0,0,0,.12);
+.overlay{position:fixed;inset:0;background:rgba(8,25,40,.78);display:none;align-items:center;justify-content:center;padding:22px;z-index:100}
 
-}
+.overlay.show{display:flex}
 
-.header h1 {
+.panel{width:100%;max-width:400px;background:white;border-radius:25px;padding:28px 22px;text-align:center;box-shadow:0 10px 35px rgba(0,0,0,.35)}
 
-  margin: 0;
+.panel h2{margin-top:0;font-size:30px}
 
-  font-size: 28px;
+.start-btn,.camera-intro-btn{width:100%;border:none;border-radius:17px;padding:17px;color:white;font-size:20px;font-weight:bold;margin-top:12px}
 
-}
+.start-btn{background:#1976d2}
 
-.header p {
+.start-btn:disabled{background:#aab7c4;opacity:.7}
 
-  margin: 5px 0 0;
+.camera-intro-btn{background:#222}
 
-  font-size: 14px;
+.photo-status{margin-top:12px;font-weight:bold;font-size:14px}
 
-}
+.rank{margin-top:18px;background:#f1f6fa;border-radius:15px;padding:12px;text-align:left}
 
-.stats {
+.rank-title{font-weight:bold;text-align:center;margin-bottom:7px}
 
-  display: flex;
+.rank-row{display:flex;justify-content:space-between;padding:5px 2px}
 
-  justify-content: space-between;
+#cameraOverlay{position:fixed;inset:0;background:#000;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
 
-  gap: 8px;
+#cameraOverlay video{width:100%;max-width:420px;max-height:70vh;object-fit:cover;border-radius:20px;transform:scaleX(-1)}
 
-  margin-top: 12px;
+.camera-action{margin-top:20px;padding:14px 28px;border:0;border-radius:30px;background:white;color:#111;font-size:18px;font-weight:bold}
 
-}
+.camera-close{margin-top:10px;padding:10px 22px;border:0;border-radius:20px;background:#333;color:white;font-size:15px}
 
-.stat {
-
-  flex: 1;
-
-  background: white;
-
-  border-radius: 14px;
-
-  padding: 9px 5px;
-
-  text-align: center;
-
-  box-shadow: 0 4px 12px rgba(0,0,0,.08);
-
-  font-weight: bold;
-
-}
-
-.label {
-
-  display: block;
-
-  font-size: 11px;
-
-  opacity: .65;
-
-}
-
-.value {
-
-  display: block;
-
-  font-size: 20px;
-
-  margin-top: 2px;
-
-}
-
-.game-area {
-
-  position: relative;
-
-  flex: 1;
-
-  margin-top: 12px;
-
-  min-height: 390px;
-
-  background:
-
-    linear-gradient(#ffffffaa, #ffffffaa),
-
-    repeating-linear-gradient(
-
-      45deg,
-
-      #d9c19a 0,
-
-      #d9c19a 22px,
-
-      #cdb287 22px,
-
-      #cdb287 44px
-
-    );
-
-  border: 5px solid white;
-
-  border-radius: 24px;
-
-  overflow: hidden;
-
-  box-shadow:
-
-    inset 0 0 20px rgba(0,0,0,.12),
-
-    0 5px 18px rgba(0,0,0,.12);
-
-}
-
-.instructions {
-
-  text-align: center;
-
-  padding: 10px;
-
-  font-weight: bold;
-
-  background: rgba(255,255,255,.85);
-
-  border-radius: 14px;
-
-  margin: 10px;
-
-}
-
-.package {
-
-  position: absolute;
-
-  width: 74px;
-
-  height: 74px;
-
-  background: #c98a45;
-
-  border: 4px solid #8b5a2b;
-
-  border-radius: 13px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  font-size: 38px;
-
-  box-shadow: 0 5px 10px rgba(0,0,0,.25);
-
-  z-index: 5;
-
-}
-
-.package::after {
-
-  content: "";
-
-  position: absolute;
-
-  width: 7px;
-
-  height: 100%;
-
-  background: #f1d08b;
-
-  opacity: .9;
-
-}
-
-.player {
-
-  position: absolute;
-
-  bottom: 18px;
-
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  width: 72px;
-
-  height: 72px;
-
-  border-radius: 50%;
-
-  background: #1976d2;
-
-  border: 5px solid white;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  font-size: 38px;
-
-  box-shadow: 0 5px 12px rgba(0,0,0,.3);
-
-  z-index: 10;
-
-  background-size: cover;
-
-  background-position: center;
-
-  overflow: hidden;
-
-}
-
-.controls {
-
-  display: flex;
-
-  justify-content: space-between;
-
-  gap: 30px;
-
-  margin-top: 14px;
-
-  padding: 0 12px;
-
-}
-
-.control {
-
-  flex: 1;
-
-  height: 76px;
-
-  border: none;
-
-  border-radius: 22px;
-
-  background: white;
-
-  color: #17324d;
-
-  font-size: 38px;
-
-  font-weight: bold;
-
-  box-shadow: 0 6px 15px rgba(0,0,0,.18);
-
-  touch-action: none;
-
-  user-select: none;
-
-}
-
-.control:active {
-
-  transform: scale(.94);
-
-  background: #e8f2ff;
-
-}
-
-.message {
-
-  text-align: center;
-
-  min-height: 28px;
-
-  margin-top: 7px;
-
-  font-weight: bold;
-
-  font-size: 16px;
-
-}
-
-.overlay {
-
-  position: fixed;
-
-  inset: 0;
-
-  background: rgba(8,25,40,.78);
-
-  display: none;
-
-  align-items: center;
-
-  justify-content: center;
-
-  padding: 22px;
-
-  z-index: 100;
-
-}
-
-.overlay.show {
-
-  display: flex;
-
-}
-
-.panel {
-
-  width: 100%;
-
-  max-width: 400px;
-
-  background: white;
-
-  border-radius: 25px;
-
-  padding: 28px 22px;
-
-  text-align: center;
-
-  box-shadow: 0 10px 35px rgba(0,0,0,.35);
-
-}
-
-.panel h2 {
-
-  margin-top: 0;
-
-  font-size: 30px;
-
-}
-
-.start-btn,
-
-.camera-intro-btn {
-
-  width: 100%;
-
-  border: none;
-
-  border-radius: 17px;
-
-  padding: 17px;
-
-  color: white;
-
-  font-size: 20px;
-
-  font-weight: bold;
-
-  margin-top: 12px;
-
-}
-
-.start-btn {
-
-  background: #1976d2;
-
-}
-
-.start-btn:disabled {
-
-  background: #aab7c4;
-
-  opacity: .7;
-
-}
-
-.camera-intro-btn {
-
-  background: #222;
-
-}
-
-.photo-status {
-
-  margin-top: 12px;
-
-  font-weight: bold;
-
-  font-size: 14px;
-
-}
-
-.rank {
-
-  margin-top: 18px;
-
-  background: #f1f6fa;
-
-  border-radius: 15px;
-
-  padding: 12px;
-
-  text-align: left;
-
-}
-
-.rank-title {
-
-  font-weight: bold;
-
-  text-align: center;
-
-  margin-bottom: 7px;
-
-}
-
-.rank-row {
-
-  display: flex;
-
-  justify-content: space-between;
-
-  padding: 5px 2px;
-
-}
-
-#cameraOverlay {
-
-  position: fixed;
-
-  inset: 0;
-
-  background: #000;
-
-  z-index: 99999;
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-
-  justify-content: center;
-
-  padding: 20px;
-
-}
-
-#cameraOverlay video {
-
-  width: 100%;
-
-  max-width: 420px;
-
-  max-height: 70vh;
-
-  object-fit: cover;
-
-  border-radius: 20px;
-
-  transform: scaleX(-1);
-
-}
-
-.camera-action {
-
-  margin-top: 20px;
-
-  padding: 14px 28px;
-
-  border: 0;
-
-  border-radius: 30px;
-
-  background: white;
-
-  color: #111;
-
-  font-size: 18px;
-
-  font-weight: bold;
-
-}
-
-.camera-close {
-
-  margin-top: 10px;
-
-  padding: 10px 22px;
-
-  border: 0;
-
-  border-radius: 20px;
-
-  background: #333;
-
-  color: white;
-
-  font-size: 15px;
-
-}
-
-@media (max-height: 700px) {
-
-  .game-area {
-
-    min-height: 300px;
-
-  }
-
-  .control {
-
-    height: 65px;
-
-  }
-
-}
+@media(max-height:700px){.game-area{min-height:300px}.control{height:65px}}
 
 </style>
 
@@ -578,69 +108,61 @@ body {
 
 <div class="game">
 
-  <div class="header">
+<div class="header">
 
-    <h1>📦 Operasi Bungkus</h1>
+<h1>📦 Operasi Bungkus</h1>
 
-    <p>Tangkap barang sebelum terlepas!</p>
+<p>Tangkap barang yang betul!</p>
 
-  </div>
+</div>
 
-  <div class="stats">
+<div class="stats">
 
-    <div class="stat">
+<div class="stat"><span class="label">LEVEL</span><span class="value" id="level">1</span></div>
 
-      <span class="label">LEVEL</span>
+<div class="stat"><span class="label">SKOR</span><span class="value" id="score">0</span></div>
 
-      <span class="value" id="level">1</span>
+<div class="stat"><span class="label">NYAWA</span><span class="value" id="lives">❤️❤️❤️</span></div>
 
-    </div>
+</div>
 
-    <div class="stat">
+<div class="game-area" id="gameArea">
 
-      <span class="label">SKOR</span>
+<div class="instructions" id="instructions">
 
-      <span class="value" id="score">0</span>
+📦 Ambil barang yang betul. Elak barang salah!
 
-    </div>
+</div>
 
-    <div class="stat">
+<div class="boss" id="boss">👹</div>
 
-      <span class="label">NYAWA</span>
+<div class="boss-bar" id="bossBar">
 
-      <span class="value" id="lives">❤️❤️❤️</span>
+<div class="boss-hp" id="bossHp"></div>
 
-    </div>
+</div>
 
-  </div>
+<div class="package" id="package">📦</div>
 
-  <div class="game-area" id="gameArea">
+<div class="wrong-item" id="wrongItem">🗑️</div>
 
-    <div class="instructions">
+<div class="player" id="player">🧑‍💼</div>
 
-      Gerakkan pekerja ↔️ dan ambil 📦
+</div>
 
-    </div>
+<div class="controls">
 
-    <div class="package" id="package">📦</div>
+<button class="control" id="left">◀</button>
 
-    <div class="player" id="player">🧑‍💼</div>
+<button class="control" id="right">▶</button>
 
-  </div>
+</div>
 
-  <div class="controls">
+<div class="message" id="message">
 
-    <button class="control" id="left">◀</button>
+Sedia untuk mula!
 
-    <button class="control" id="right">▶</button>
-
-  </div>
-
-  <div class="message" id="message">
-
-    Sedia untuk mula!
-
-  </div>
+</div>
 
 </div>
 
@@ -648,1366 +170,320 @@ body {
 
 <div class="overlay show" id="startOverlay">
 
-  <div class="panel">
+<div class="panel">
 
-    <h2>📦 Operasi Bungkus</h2>
+<h2>📦 Operasi Bungkus</h2>
 
-    <p>Siap untuk operasi?</p>
+<p>Siap untuk operasi?</p>
 
-    <button
+<button class="camera-intro-btn" id="cameraIntroBtn">
 
-      class="camera-intro-btn"
+📸 AMBIL GAMBAR
 
-      id="cameraIntroBtn"
+</button>
 
-    >
+<div class="photo-status" id="photoStatus">
 
-      📸 AMBIL GAMBAR PLAYER
-
-    </button>
-
-    <div
-
-      class="photo-status"
-
-      id="photoStatus"
-
-    >
-
-      Ambil gambar muka dahulu.
-
-    </div>
-
-    <button
-
-      class="start-btn"
-
-      id="startBtn"
-
-      disabled
-
-    >
-
-      MULA GAME
-
-    </button>
-
-    <div class="rank">
-
-      <div class="rank-title">
-
-        🏆 RANKING
-
-      </div>
-
-      <div class="rank-row">
-
-        <span>🥇 Rekod</span>
-
-        <strong id="bestScore">0</strong>
-
-      </div>
-
-    </div>
-
-  </div>
+Ambil gambar muka dahulu.
 
 </div>
 
-<!-- GAME OVER -->
+<button class="start-btn" id="startBtn" disabled>
+
+MULA GAME
+
+</button>
+
+<div class="rank">
+
+<div class="rank-title">
+
+🏆 RANKING
+
+</div>
+
+<div class="rank-row">
+
+<span>🥇 Rekod</span>
+
+<strong id="bestScore">0</strong>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- END -->
 
 <div class="overlay" id="endOverlay">
 
-  <div class="panel">
+<div class="panel">
 
-    <h2 id="endTitle">
+<h2 id="endTitle">
 
-      🎉 Tahniah!
+📦 Operasi Tamat!
 
-    </h2>
+</h2>
 
-    <p id="endText"></p>
+<p id="endText"></p>
 
-    <button
+<button class="start-btn" id="againBtn">
 
-      class="start-btn"
+CUBA LAGI
 
-      id="againBtn"
+</button>
 
-    >
+<div class="rank">
 
-      CUBA LAGI
+<div class="rank-title">
 
-    </button>
-
-    <div class="rank">
-
-      <div class="rank-title">
-
-        🏆 RANKING
-
-      </div>
-
-      <div class="rank-row">
-
-        <span>🥇 Rekod</span>
-
-        <strong id="finalBest">0</strong>
-
-      </div>
-
-    </div>
-
-  </div>
+🏆 RANKING
 
 </div>
 
-<!-- VOICE -->
+<div class="rank-row">
+
+<span>🥇 Rekod</span>
+
+<strong id="finalBest">0</strong>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 <audio id="voiceBad" preload="auto">
 
-  <source src="Westree Hotel 2.m4a" type="audio/mp4">
+<source src="Westree Hotel 2.m4a" type="audio/mp4">
 
 </audio>
 
 <audio id="voiceNext" preload="auto">
 
-  <source src="Westree Hotel 3.m4a" type="audio/mp4">
+<source src="Westree Hotel 3.m4a" type="audio/mp4">
 
 </audio>
 
 <audio id="voiceDone" preload="auto">
 
-  <source src="Westree Hotel 4.m4a" type="audio/mp4">
+<source src="Westree Hotel 4.m4a" type="audio/mp4">
 
 </audio>
 
 <audio id="voiceTry" preload="auto">
 
-  <source src="Westree Hotel 5.m4a" type="audio/mp4">
+<source src="Westree Hotel 5.m4a" type="audio/mp4">
 
 </audio>
 
 <script>
 
-const gameArea =
+const gameArea=document.getElementById("gameArea");
 
-  document.getElementById("gameArea");
+const player=document.getElementById("player");
 
-const player =
+const pack=document.getElementById("package");
 
-  document.getElementById("player");
+const wrong=document.getElementById("wrongItem");
 
-const pack =
+const levelText=document.getElementById("level");
 
-  document.getElementById("package");
+const scoreText=document.getElementById("score");
 
-const levelText =
+const livesText=document.getElementById("lives");
 
-  document.getElementById("level");
+const message=document.getElementById("message");
 
-const scoreText =
+const startOverlay=document.getElementById("startOverlay");
 
-  document.getElementById("score");
+const endOverlay=document.getElementById("endOverlay");
 
-const livesText =
+const startBtn=document.getElementById("startBtn");
 
-  document.getElementById("lives");
+const againBtn=document.getElementById("againBtn");
 
-const message =
+const cameraIntroBtn=document.getElementById("cameraIntroBtn");
 
-  document.getElementById("message");
+const photoStatus=document.getElementById("photoStatus");
 
-const startOverlay =
+const bestScoreText=document.getElementById("bestScore");
 
-  document.getElementById("startOverlay");
+const finalBestText=document.getElementById("finalBest");
 
-const endOverlay =
+const voiceBad=document.getElementById("voiceBad");
 
-  document.getElementById("endOverlay");
+const voiceNext=document.getElementById("voiceNext");
 
-const startBtn =
+const voiceDone=document.getElementById("voiceDone");
 
-  document.getElementById("startBtn");
+const voiceTry=document.getElementById("voiceTry");
 
-const againBtn =
+const boss=document.getElementById("boss");
 
-  document.getElementById("againBtn");
+const bossBar=document.getElementById("bossBar");
 
-const cameraIntroBtn =
+const bossHp=document.getElementById("bossHp");
 
-  document.getElementById("cameraIntroBtn");
+let playerX=50;
 
-const photoStatus =
+let packageX=50;
 
-  document.getElementById("photoStatus");
+let wrongX=30;
 
-const bestScoreText =
+let packageY=8;
 
-  document.getElementById("bestScore");
+let wrongY=-25;
 
-const finalBestText =
+let level=1;
 
-  document.getElementById("finalBest");
+let score=0;
 
-const voiceBad =
+let lives=3;
 
-  document.getElementById("voiceBad");
+let running=false;
 
-const voiceNext =
+let lastTime=0;
 
-  document.getElementById("voiceNext");
+let packageSpeed=.065;
 
-const voiceDone =
+let wrongSpeed=.075;
 
-  document.getElementById("voiceDone");
+let moveLeft=false;
 
-const voiceTry =
+let moveRight=false;
 
-  document.getElementById("voiceTry");
+let playerPhotoTaken=false;
 
-let playerX = 50;
+let bossActive=false;
 
-let packageX = 50;
+let bossHealth=100;
 
-let packageY = 75;
+let bossX=50;
 
-let level = 1;
+const wrongTypes=[
 
-let score = 0;
+"🗑️",
 
-let lives = 3;
+"💣",
 
-let running = false;
+"🧱",
 
-let lastTime = 0;
+"🥫"
 
-let packageSpeed = 0.085;
+];
 
-let moveLeft = false;
+let wrongTypeIndex=0;
 
-let moveRight = false;
+let bestScore=
 
-let playerPhotoTaken = false;
+Number(
 
-let bestScore =
-
-  Number(
-
-    localStorage.getItem(
-
-      "operasiBungkusBest"
-
-    ) || 0
-
-  );
-
-bestScoreText.textContent =
-
-  bestScore;
-
-/* VOICE */
-
-function playVoice(audio) {
-
-  try {
-
-    audio.currentTime = 0;
-
-    audio.play().catch(() => {});
-
-  } catch(e) {}
-
-}
-
-/* KACING */
-
-function kacing() {
-
-  try {
-
-    const AudioContext =
-
-      window.AudioContext ||
-
-      window.webkitAudioContext;
-
-    const ctx =
-
-      new AudioContext();
-
-    const o1 =
-
-      ctx.createOscillator();
-
-    const o2 =
-
-      ctx.createOscillator();
-
-    const g =
-
-      ctx.createGain();
-
-    o1.type = "triangle";
-
-    o2.type = "sine";
-
-    o1.frequency.value = 900;
-
-    o2.frequency.value = 1400;
-
-    g.gain.setValueAtTime(
-
-      0.0001,
-
-      ctx.currentTime
-
-    );
-
-    g.gain.exponentialRampToValueAtTime(
-
-      0.28,
-
-      ctx.currentTime + 0.02
-
-    );
-
-    g.gain.exponentialRampToValueAtTime(
-
-      0.0001,
-
-      ctx.currentTime + 0.35
-
-    );
-
-    o1.connect(g);
-
-    o2.connect(g);
-
-    g.connect(ctx.destination);
-
-    o1.start();
-
-    o2.start();
-
-    o1.stop(
-
-      ctx.currentTime + 0.35
-
-    );
-
-    o2.stop(
-
-      ctx.currentTime + 0.35
-
-    );
-
-  } catch(e) {}
-
-}
-
-/* MUSIC */
-
-let musicTimer = null;
-
-let musicCtx = null;
-
-function startMusic() {
-
-  if (musicTimer) return;
-
-  try {
-
-    const AudioContext =
-
-      window.AudioContext ||
-
-      window.webkitAudioContext;
-
-    musicCtx =
-
-      new AudioContext();
-
-    const notes = [
-
-      261.63,
-
-      329.63,
-
-      392.00,
-
-      329.63
-
-    ];
-
-    let i = 0;
-
-    musicTimer =
-
-      setInterval(() => {
-
-        if (!running) return;
-
-        const osc =
-
-          musicCtx.createOscillator();
-
-        const gain =
-
-          musicCtx.createGain();
-
-        osc.type = "sine";
-
-        osc.frequency.value =
-
-          notes[i % notes.length];
-
-        gain.gain.setValueAtTime(
-
-          0.0001,
-
-          musicCtx.currentTime
-
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-
-          0.025,
-
-          musicCtx.currentTime + 0.02
-
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-
-          0.0001,
-
-          musicCtx.currentTime + 0.35
-
-        );
-
-        osc.connect(gain);
-
-        gain.connect(
-
-          musicCtx.destination
-
-        );
-
-        osc.start();
-
-        osc.stop(
-
-          musicCtx.currentTime + 0.35
-
-        );
-
-        i++;
-
-      }, 450);
-
-  } catch(e) {}
-
-}
-
-/* PACKAGE */
-
-function resetPackage() {
-
-  packageX =
-
-    Math.random() * 82 + 9;
-
-  packageY = 8;
-
-  pack.style.left =
-
-    packageX + "%";
-
-  pack.style.top =
-
-    packageY + "%";
-
-}
-
-/* LIVES */
-
-function updateLives() {
-
-  livesText.textContent =
-
-    "❤️".repeat(lives) +
-
-    "🖤".repeat(3 - lives);
-
-}
-
-/* START GAME */
-
-function startGame() {
-
-  if (!playerPhotoTaken) {
-
-    message.textContent =
-
-      "📸 Ambil gambar player dahulu!";
-
-    return;
-
-  }
-
-  level = 1;
-
-  score = 0;
-
-  lives = 3;
-
-  playerX = 50;
-
-  packageSpeed = 0.085;
-
-  running = true;
-
-  levelText.textContent =
-
-    level;
-
-  scoreText.textContent =
-
-    score;
-
-  updateLives();
-
-  player.style.left =
-
-    playerX + "%";
-
-  resetPackage();
-
-  startOverlay.classList.remove(
-
-    "show"
-
-  );
-
-  message.textContent =
-
-    "📦 Cepat! Ambil barang!";
-
-  startMusic();
-
-  lastTime =
-
-    performance.now();
-
-  requestAnimationFrame(
-
-    gameLoop
-
-  );
-
-}
-
-/* GAME LOOP */
-
-function gameLoop(time) {
-
-  if (!running) return;
-
-  const delta =
-
-    time - lastTime;
-
-  lastTime = time;
-
-  if (moveLeft) {
-
-    playerX -=
-
-      0.10 * delta;
-
-  }
-
-  if (moveRight) {
-
-    playerX +=
-
-      0.10 * delta;
-
-  }
-
-  playerX =
-
-    Math.max(
-
-      7,
-
-      Math.min(93, playerX)
-
-    );
-
-  player.style.left =
-
-    playerX + "%";
-
-  packageY +=
-
-    packageSpeed * delta;
-
-  pack.style.left =
-
-    packageX + "%";
-
-  pack.style.top =
-
-    packageY + "%";
-
-  const playerRect =
-
-    player.getBoundingClientRect();
-
-  const packageRect =
-
-    pack.getBoundingClientRect();
-
-  const touching =
-
-    playerRect.left <
-
-      packageRect.right &&
-
-    playerRect.right >
-
-      packageRect.left &&
-
-    playerRect.top <
-
-      packageRect.bottom &&
-
-    playerRect.bottom >
-
-      packageRect.top;
-
-  if (touching) {
-
-    score += 10;
-
-    scoreText.textContent =
-
-      score;
-
-    kacing();
-
-    message.textContent =
-
-      "✨ KACING! Barang berjaya dibungkus!";
-
-    resetPackage();
-
-    checkLevel();
-
-  }
-
-  else if (packageY > 92) {
-
-    lives--;
-
-    updateLives();
-
-    playVoice(
-
-      voiceBad
-
-    );
-
-    message.textContent =
-
-      "Aduh! Barang terlepas!";
-
-    resetPackage();
-
-    if (lives <= 0) {
-
-      gameOver();
-
-      return;
-
-    }
-
-  }
-
-  requestAnimationFrame(
-
-    gameLoop
-
-  );
-
-}
-
-/* LEVEL */
-
-function checkLevel() {
-
-  const newLevel =
-
-    Math.min(
-
-      5,
-
-      Math.floor(score / 50) + 1
-
-    );
-
-  if (newLevel > level) {
-
-    level =
-
-      newLevel;
-
-    levelText.textContent =
-
-      level;
-
-    packageSpeed =
-
-      0.065 +
-
-      ((level - 1) * 0.008);
-
-    playVoice(
-
-      voiceNext
-
-    );
-
-    message.textContent =
-
-      "🚀 Level " +
-
-      level +
-
-      "!";
-
-    if (level === 5) {
-
-      playVoice(
-
-        voiceDone
-
-      );
-
-    }
-
-  }
-
-}
-
-/* GAME OVER */
-
-function gameOver() {
-
-  running = false;
-
-  playVoice(
-
-    voiceTry
-
-  );
-
-  if (score > bestScore) {
-
-    bestScore =
-
-      score;
-
-    localStorage.setItem(
-
-      "operasiBungkusBest",
-
-      bestScore
-
-    );
-
-    bestScoreText.textContent =
-
-      bestScore;
-
-  }
-
-  finalBestText.textContent =
-
-    bestScore;
-
-  document.getElementById(
-
-    "endTitle"
-
-  ).textContent =
-
-    "📦 Operasi Tamat!";
-
-  document.getElementById(
-
-    "endText"
-
-  ).textContent =
-
-    "Skor kau: " +
-
-    score +
-
-    " | Level: " +
-
-    level;
-
-  endOverlay.classList.add(
-
-    "show"
-
-  );
-
-}
-
-/* CONTROLS */
-
-function holdButton(
-
-  button,
-
-  direction
-
-) {
-
-  const down = (e) => {
-
-    e.preventDefault();
-
-    if (direction === "left") {
-
-      moveLeft = true;
-
-    } else {
-
-      moveRight = true;
-
-    }
-
-  };
-
-  const up = (e) => {
-
-    e.preventDefault();
-
-    if (direction === "left") {
-
-      moveLeft = false;
-
-    } else {
-
-      moveRight = false;
-
-    }
-
-  };
-
-  button.addEventListener(
-
-    "pointerdown",
-
-    down
-
-  );
-
-  button.addEventListener(
-
-    "pointerup",
-
-    up
-
-  );
-
-  button.addEventListener(
-
-    "pointercancel",
-
-    up
-
-  );
-
-  button.addEventListener(
-
-    "pointerleave",
-
-    up
-
-  );
-
-}
-
-holdButton(
-
-  document.getElementById("left"),
-
-  "left"
+localStorage.getItem("operasiBungkusBest")||0
 
 );
 
-holdButton(
+bestScoreText.textContent=bestScore;
 
-  document.getElementById("right"),
+function playVoice(audio){
 
-  "right"
+try{
 
-);
+audio.currentTime=0;
 
-/* BUTTONS */
+audio.play().catch(()=>{});
 
-startBtn.addEventListener(
-
-  "click",
-
-  startGame
-
-);
-
-againBtn.addEventListener(
-
-  "click",
-
-  () => {
-
-    endOverlay.classList.remove(
-
-      "show"
-
-    );
-
-    startGame();
-
-  }
-
-);
-
-/* KEYBOARD */
-
-document.addEventListener(
-
-  "keydown",
-
-  (e) => {
-
-    if (e.key === "ArrowLeft") {
-
-      moveLeft = true;
-
-    }
-
-    if (e.key === "ArrowRight") {
-
-      moveRight = true;
-
-    }
-
-  }
-
-);
-
-document.addEventListener(
-
-  "keyup",
-
-  (e) => {
-
-    if (e.key === "ArrowLeft") {
-
-      moveLeft = false;
-
-    }
-
-    if (e.key === "ArrowRight") {
-
-      moveRight = false;
-
-    }
-
-  }
-
-);
-
-/* PLAYER PHOTO */
-
-function loadPlayerPhoto() {
-
-  const savedPhoto =
-
-    localStorage.getItem(
-
-      "operasiBungkusPlayerPhoto"
-
-    );
-
-  if (savedPhoto) {
-
-    player.style.backgroundImage =
-
-      "url('" +
-
-      savedPhoto +
-
-      "')";
-
-    player.textContent = "";
-
-    playerPhotoTaken = true;
-
-    startBtn.disabled = false;
-
-    photoStatus.textContent =
-
-      "✅ Gambar player sudah ada.";
-
-  }
+}catch(e){}
 
 }
 
-/* CAMERA */
+function kacing(){
 
-function openGameCamera() {
+try{
 
-  if (
+const AudioContext=
 
-    !navigator.mediaDevices ||
+window.AudioContext||
 
-    !navigator.mediaDevices.getUserMedia
+window.webkitAudioContext;
 
-  ) {
+const ctx=new AudioContext();
 
-    alert(
+const o1=ctx.createOscillator();
 
-      "Camera is not supported on this device/browser."
+const o2=ctx.createOscillator();
 
-    );
+const g=ctx.createGain();
 
-    return;
+o1.type="triangle";
 
-  }
+o2.type="sine";
 
-  const overlay =
+o1.frequency.value=900;
 
-    document.createElement(
+o2.frequency.value=1400;
 
-      "div"
+g.gain.setValueAtTime(
 
-    );
+0.0001,
 
-  overlay.id =
-
-    "cameraOverlay";
-
-  const video =
-
-    document.createElement(
-
-      "video"
-
-    );
-
-  video.autoplay = true;
-
-  video.playsInline = true;
-
-  video.muted = true;
-
-  const captureBtn =
-
-    document.createElement(
-
-      "button"
-
-    );
-
-  captureBtn.textContent =
-
-    "📸 TAKE PHOTO";
-
-  captureBtn.className =
-
-    "camera-action";
-
-  const closeBtn =
-
-    document.createElement(
-
-      "button"
-
-    );
-
-  closeBtn.textContent =
-
-    "✕ CLOSE";
-
-  closeBtn.className =
-
-    "camera-close";
-
-  overlay.appendChild(
-
-    video
-
-  );
-
-  overlay.appendChild(
-
-    captureBtn
-
-  );
-
-  overlay.appendChild(
-
-    closeBtn
-
-  );
-
-  document.body.appendChild(
-
-    overlay
-
-  );
-
-  let stream = null;
-
-  navigator.mediaDevices
-
-    .getUserMedia({
-
-      video: {
-
-        facingMode: "user"
-
-      },
-
-      audio: false
-
-    })
-
-    .then(
-
-      cameraStream => {
-
-        stream =
-
-          cameraStream;
-
-        video.srcObject =
-
-          stream;
-
-      }
-
-    )
-
-    .catch(
-
-      error => {
-
-        alert(
-
-          "Camera permission was denied."
-
-        );
-
-        overlay.remove();
-
-      }
-
-    );
-
-  captureBtn.onclick =
-
-    function() {
-
-      if (
-
-        !video.videoWidth ||
-
-        !video.videoHeight
-
-      ) {
-
-        alert(
-
-          "Camera is not ready yet."
-
-        );
-
-        return;
-
-      }
-
-      const canvas =
-
-        document.createElement(
-
-          "canvas"
-
-        );
-
-      canvas.width =
-
-        video.videoWidth;
-
-      canvas.height =
-
-        video.videoHeight;
-
-      const ctx =
-
-        canvas.getContext(
-
-          "2d"
-
-        );
-
-      /* Mirror selfie */
-
-      ctx.translate(
-
-        canvas.width,
-
-        0
-
-      );
-
-      ctx.scale(
-
-        -1,
-
-        1
-
-      );
-
-      ctx.drawImage(
-
-        video,
-
-        0,
-
-        0,
-
-        canvas.width,
-
-        canvas.height
-
-      );
-
-      const photo =
-
-        canvas.toDataURL(
-
-          "image/jpeg",
-
-          0.9
-
-        );
-
-      localStorage.setItem(
-
-        "operasiBungkusPlayerPhoto",
-
-        photo
-
-      );
-
-      player.style.backgroundImage =
-
-        "url('" +
-
-        photo +
-
-        "')";
-
-      player.textContent =
-
-        "";
-
-      playerPhotoTaken =
-
-        true;
-
-      startBtn.disabled =
-
-        false;
-
-      photoStatus.textContent =
-
-        "✅ Gambar berjaya diambil!";
-
-      if (stream) {
-
-        stream
-
-          .getTracks()
-
-          .forEach(
-
-            track =>
-
-              track.stop()
-
-          );
-
-      }
-
-      overlay.remove();
-
-    };
-
-  closeBtn.onclick =
-
-    function() {
-
-      if (stream) {
-
-        stream
-
-          .getTracks()
-
-          .forEach(
-
-            track =>
-
-              track.stop()
-
-          );
-
-      }
-
-      overlay.remove();
-
-    };
-
-}
-
-/* INTRO CAMERA */
-
-cameraIntroBtn.addEventListener(
-
-  "click",
-
-  openGameCamera
+ctx.currentTime
 
 );
 
-/* LOAD SAVED PHOTO */
+g.gain.exponentialRampToValueAtTime(
 
-loadPlayerPhoto();
+0.28,
 
-/* INITIAL PACKAGE */
+ctx.currentTime+.02
 
-resetPackage();
+);
 
-</script>
+g.gain.exponentialRampToValueAtTime(
 
-</body>
+0.0001,
 
-</html>
+ctx.currentTime+.35
+
+);
+
+o1.connect(g);
+
+o2.connect(g);
+
+g.connect(ctx.destination);
+
+o1.start();
+
+o2.start();
+
+o1.stop(ctx.currentTime+.35);
+
+o2.stop(ctx.currentTime+.35);
+
+}catch(e){}
+
+}
+
+let musicTimer=null;
+
+let musicCtx=null;
+
+function startMusic(){
+
+if(musicTimer)return;
+
+try{
+
+const AudioContext=
+
+window.AudioContext||
+
+window.webkitAudioContext;
+
+musicCtx=new
