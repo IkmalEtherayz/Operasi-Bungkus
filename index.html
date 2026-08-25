@@ -392,7 +392,9 @@ body {
 
 }
 
-.start-btn {
+.start-btn,
+
+.camera-intro-btn {
 
   width: 100%;
 
@@ -402,8 +404,6 @@ body {
 
   padding: 17px;
 
-  background: #1976d2;
-
   color: white;
 
   font-size: 20px;
@@ -411,6 +411,36 @@ body {
   font-weight: bold;
 
   margin-top: 12px;
+
+}
+
+.start-btn {
+
+  background: #1976d2;
+
+}
+
+.start-btn:disabled {
+
+  background: #aab7c4;
+
+  opacity: .7;
+
+}
+
+.camera-intro-btn {
+
+  background: #222;
+
+}
+
+.photo-status {
+
+  margin-top: 12px;
+
+  font-weight: bold;
+
+  font-size: 14px;
 
 }
 
@@ -445,34 +475,6 @@ body {
   justify-content: space-between;
 
   padding: 5px 2px;
-
-}
-
-#cameraButton {
-
-  position: fixed;
-
-  bottom: 20px;
-
-  right: 20px;
-
-  z-index: 9998;
-
-  padding: 12px 18px;
-
-  border: 0;
-
-  border-radius: 25px;
-
-  background: #222;
-
-  color: #fff;
-
-  font-size: 16px;
-
-  font-weight: bold;
-
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 
 }
 
@@ -642,6 +644,8 @@ body {
 
 </div>
 
+<!-- INTRO -->
+
 <div class="overlay show" id="startOverlay">
 
   <div class="panel">
@@ -650,7 +654,39 @@ body {
 
     <p>Siap untuk operasi?</p>
 
-    <button class="start-btn" id="startBtn">
+    <button
+
+      class="camera-intro-btn"
+
+      id="cameraIntroBtn"
+
+    >
+
+      📸 AMBIL GAMBAR PLAYER
+
+    </button>
+
+    <div
+
+      class="photo-status"
+
+      id="photoStatus"
+
+    >
+
+      Ambil gambar muka dahulu.
+
+    </div>
+
+    <button
+
+      class="start-btn"
+
+      id="startBtn"
+
+      disabled
+
+    >
 
       MULA GAME
 
@@ -658,7 +694,11 @@ body {
 
     <div class="rank">
 
-      <div class="rank-title">🏆 RANKING</div>
+      <div class="rank-title">
+
+        🏆 RANKING
+
+      </div>
 
       <div class="rank-row">
 
@@ -674,15 +714,27 @@ body {
 
 </div>
 
+<!-- GAME OVER -->
+
 <div class="overlay" id="endOverlay">
 
   <div class="panel">
 
-    <h2 id="endTitle">🎉 Tahniah!</h2>
+    <h2 id="endTitle">
+
+      🎉 Tahniah!
+
+    </h2>
 
     <p id="endText"></p>
 
-    <button class="start-btn" id="againBtn">
+    <button
+
+      class="start-btn"
+
+      id="againBtn"
+
+    >
 
       CUBA LAGI
 
@@ -690,7 +742,11 @@ body {
 
     <div class="rank">
 
-      <div class="rank-title">🏆 RANKING</div>
+      <div class="rank-title">
+
+        🏆 RANKING
+
+      </div>
 
       <div class="rank-row">
 
@@ -705,6 +761,8 @@ body {
   </div>
 
 </div>
+
+<!-- VOICE -->
 
 <audio id="voiceBad" preload="auto">
 
@@ -732,39 +790,81 @@ body {
 
 <script>
 
-const gameArea = document.getElementById("gameArea");
+const gameArea =
 
-const player = document.getElementById("player");
+  document.getElementById("gameArea");
 
-const pack = document.getElementById("package");
+const player =
 
-const levelText = document.getElementById("level");
+  document.getElementById("player");
 
-const scoreText = document.getElementById("score");
+const pack =
 
-const livesText = document.getElementById("lives");
+  document.getElementById("package");
 
-const message = document.getElementById("message");
+const levelText =
 
-const startOverlay = document.getElementById("startOverlay");
+  document.getElementById("level");
 
-const endOverlay = document.getElementById("endOverlay");
+const scoreText =
 
-const startBtn = document.getElementById("startBtn");
+  document.getElementById("score");
 
-const againBtn = document.getElementById("againBtn");
+const livesText =
 
-const bestScoreText = document.getElementById("bestScore");
+  document.getElementById("lives");
 
-const finalBestText = document.getElementById("finalBest");
+const message =
 
-const voiceBad = document.getElementById("voiceBad");
+  document.getElementById("message");
 
-const voiceNext = document.getElementById("voiceNext");
+const startOverlay =
 
-const voiceDone = document.getElementById("voiceDone");
+  document.getElementById("startOverlay");
 
-const voiceTry = document.getElementById("voiceTry");
+const endOverlay =
+
+  document.getElementById("endOverlay");
+
+const startBtn =
+
+  document.getElementById("startBtn");
+
+const againBtn =
+
+  document.getElementById("againBtn");
+
+const cameraIntroBtn =
+
+  document.getElementById("cameraIntroBtn");
+
+const photoStatus =
+
+  document.getElementById("photoStatus");
+
+const bestScoreText =
+
+  document.getElementById("bestScore");
+
+const finalBestText =
+
+  document.getElementById("finalBest");
+
+const voiceBad =
+
+  document.getElementById("voiceBad");
+
+const voiceNext =
+
+  document.getElementById("voiceNext");
+
+const voiceDone =
+
+  document.getElementById("voiceDone");
+
+const voiceTry =
+
+  document.getElementById("voiceTry");
 
 let playerX = 50;
 
@@ -788,11 +888,23 @@ let moveLeft = false;
 
 let moveRight = false;
 
+let playerPhotoTaken = false;
+
 let bestScore =
 
-  Number(localStorage.getItem("operasiBungkusBest") || 0);
+  Number(
 
-bestScoreText.textContent = bestScore;
+    localStorage.getItem(
+
+      "operasiBungkusBest"
+
+    ) || 0
+
+  );
+
+bestScoreText.textContent =
+
+  bestScore;
 
 /* VOICE */
 
@@ -820,13 +932,21 @@ function kacing() {
 
       window.webkitAudioContext;
 
-    const ctx = new AudioContext();
+    const ctx =
 
-    const o1 = ctx.createOscillator();
+      new AudioContext();
 
-    const o2 = ctx.createOscillator();
+    const o1 =
 
-    const g = ctx.createGain();
+      ctx.createOscillator();
+
+    const o2 =
+
+      ctx.createOscillator();
+
+    const g =
+
+      ctx.createGain();
 
     o1.type = "triangle";
 
@@ -870,15 +990,23 @@ function kacing() {
 
     o2.start();
 
-    o1.stop(ctx.currentTime + 0.35);
+    o1.stop(
 
-    o2.stop(ctx.currentTime + 0.35);
+      ctx.currentTime + 0.35
+
+    );
+
+    o2.stop(
+
+      ctx.currentTime + 0.35
+
+    );
 
   } catch(e) {}
 
 }
 
-/* BACKGROUND MUSIC */
+/* MUSIC */
 
 let musicTimer = null;
 
@@ -896,7 +1024,9 @@ function startMusic() {
 
       window.webkitAudioContext;
 
-    musicCtx = new AudioContext();
+    musicCtx =
+
+      new AudioContext();
 
     const notes = [
 
@@ -912,59 +1042,69 @@ function startMusic() {
 
     let i = 0;
 
-    musicTimer = setInterval(() => {
+    musicTimer =
 
-      if (!running) return;
+      setInterval(() => {
 
-      const osc = musicCtx.createOscillator();
+        if (!running) return;
 
-      const gain = musicCtx.createGain();
+        const osc =
 
-      osc.type = "sine";
+          musicCtx.createOscillator();
 
-      osc.frequency.value =
+        const gain =
 
-        notes[i % notes.length];
+          musicCtx.createGain();
 
-      gain.gain.setValueAtTime(
+        osc.type = "sine";
 
-        0.0001,
+        osc.frequency.value =
 
-        musicCtx.currentTime
+          notes[i % notes.length];
 
-      );
+        gain.gain.setValueAtTime(
 
-      gain.gain.exponentialRampToValueAtTime(
+          0.0001,
 
-        0.025,
+          musicCtx.currentTime
 
-        musicCtx.currentTime + 0.02
+        );
 
-      );
+        gain.gain.exponentialRampToValueAtTime(
 
-      gain.gain.exponentialRampToValueAtTime(
+          0.025,
 
-        0.0001,
+          musicCtx.currentTime + 0.02
 
-        musicCtx.currentTime + 0.35
+        );
 
-      );
+        gain.gain.exponentialRampToValueAtTime(
 
-      osc.connect(gain);
+          0.0001,
 
-      gain.connect(musicCtx.destination);
+          musicCtx.currentTime + 0.35
 
-      osc.start();
+        );
 
-      osc.stop(
+        osc.connect(gain);
 
-        musicCtx.currentTime + 0.35
+        gain.connect(
 
-      );
+          musicCtx.destination
 
-      i++;
+        );
 
-    }, 450);
+        osc.start();
+
+        osc.stop(
+
+          musicCtx.currentTime + 0.35
+
+        );
+
+        i++;
+
+      }, 450);
 
   } catch(e) {}
 
@@ -1002,9 +1142,19 @@ function updateLives() {
 
 }
 
-/* START */
+/* START GAME */
 
 function startGame() {
+
+  if (!playerPhotoTaken) {
+
+    message.textContent =
+
+      "📸 Ambil gambar player dahulu!";
+
+    return;
+
+  }
 
   level = 1;
 
@@ -1018,9 +1168,13 @@ function startGame() {
 
   running = true;
 
-  levelText.textContent = level;
+  levelText.textContent =
 
-  scoreText.textContent = score;
+    level;
+
+  scoreText.textContent =
+
+    score;
 
   updateLives();
 
@@ -1030,7 +1184,11 @@ function startGame() {
 
   resetPackage();
 
-  startOverlay.classList.remove("show");
+  startOverlay.classList.remove(
+
+    "show"
+
+  );
 
   message.textContent =
 
@@ -1042,7 +1200,11 @@ function startGame() {
 
     performance.now();
 
-  requestAnimationFrame(gameLoop);
+  requestAnimationFrame(
+
+    gameLoop
+
+  );
 
 }
 
@@ -1060,13 +1222,17 @@ function gameLoop(time) {
 
   if (moveLeft) {
 
-    playerX -= 0.10 * delta;
+    playerX -=
+
+      0.10 * delta;
 
   }
 
   if (moveRight) {
 
-    playerX += 0.10 * delta;
+    playerX +=
+
+      0.10 * delta;
 
   }
 
@@ -1106,13 +1272,21 @@ function gameLoop(time) {
 
   const touching =
 
-    playerRect.left < packageRect.right &&
+    playerRect.left <
 
-    playerRect.right > packageRect.left &&
+      packageRect.right &&
 
-    playerRect.top < packageRect.bottom &&
+    playerRect.right >
 
-    playerRect.bottom > packageRect.top;
+      packageRect.left &&
+
+    playerRect.top <
+
+      packageRect.bottom &&
+
+    playerRect.bottom >
+
+      packageRect.top;
 
   if (touching) {
 
@@ -1140,7 +1314,11 @@ function gameLoop(time) {
 
     updateLives();
 
-    playVoice(voiceBad);
+    playVoice(
+
+      voiceBad
+
+    );
 
     message.textContent =
 
@@ -1158,7 +1336,11 @@ function gameLoop(time) {
 
   }
 
-  requestAnimationFrame(gameLoop);
+  requestAnimationFrame(
+
+    gameLoop
+
+  );
 
 }
 
@@ -1178,7 +1360,9 @@ function checkLevel() {
 
   if (newLevel > level) {
 
-    level = newLevel;
+    level =
+
+      newLevel;
 
     levelText.textContent =
 
@@ -1190,15 +1374,27 @@ function checkLevel() {
 
       ((level - 1) * 0.008);
 
-    playVoice(voiceNext);
+    playVoice(
+
+      voiceNext
+
+    );
 
     message.textContent =
 
-      "🚀 Level " + level + "!";
+      "🚀 Level " +
+
+      level +
+
+      "!";
 
     if (level === 5) {
 
-      playVoice(voiceDone);
+      playVoice(
+
+        voiceDone
+
+      );
 
     }
 
@@ -1212,11 +1408,17 @@ function gameOver() {
 
   running = false;
 
-  playVoice(voiceTry);
+  playVoice(
+
+    voiceTry
+
+  );
 
   if (score > bestScore) {
 
-    bestScore = score;
+    bestScore =
+
+      score;
 
     localStorage.setItem(
 
@@ -1258,13 +1460,23 @@ function gameOver() {
 
     level;
 
-  endOverlay.classList.add("show");
+  endOverlay.classList.add(
+
+    "show"
+
+  );
 
 }
 
 /* CONTROLS */
 
-function holdButton(button, direction) {
+function holdButton(
+
+  button,
+
+  direction
+
+) {
 
   const down = (e) => {
 
@@ -1364,7 +1576,11 @@ againBtn.addEventListener(
 
   () => {
 
-    endOverlay.classList.remove("show");
+    endOverlay.classList.remove(
+
+      "show"
+
+    );
 
     startGame();
 
@@ -1418,80 +1634,6 @@ document.addEventListener(
 
 );
 
-/* PICKUP SOUND */
-
-function playPickupSound() {
-
-  try {
-
-    const audioCtx =
-
-      new (
-
-        window.AudioContext ||
-
-        window.webkitAudioContext
-
-      )();
-
-    const osc =
-
-      audioCtx.createOscillator();
-
-    const gain =
-
-      audioCtx.createGain();
-
-    osc.type = "sine";
-
-    osc.frequency.setValueAtTime(
-
-      900,
-
-      audioCtx.currentTime
-
-    );
-
-    osc.frequency.exponentialRampToValueAtTime(
-
-      1600,
-
-      audioCtx.currentTime + 0.08
-
-    );
-
-    gain.gain.setValueAtTime(
-
-      0.25,
-
-      audioCtx.currentTime
-
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-
-      0.01,
-
-      audioCtx.currentTime + 0.15
-
-    );
-
-    osc.connect(gain);
-
-    gain.connect(audioCtx.destination);
-
-    osc.start();
-
-    osc.stop(
-
-      audioCtx.currentTime + 0.15
-
-    );
-
-  } catch(e) {}
-
-}
-
 /* PLAYER PHOTO */
 
 function loadPlayerPhoto() {
@@ -1508,9 +1650,21 @@ function loadPlayerPhoto() {
 
     player.style.backgroundImage =
 
-      "url('" + savedPhoto + "')";
+      "url('" +
+
+      savedPhoto +
+
+      "')";
 
     player.textContent = "";
+
+    playerPhotoTaken = true;
+
+    startBtn.disabled = false;
+
+    photoStatus.textContent =
+
+      "✅ Gambar player sudah ada.";
 
   }
 
@@ -1540,7 +1694,11 @@ function openGameCamera() {
 
   const overlay =
 
-    document.createElement("div");
+    document.createElement(
+
+      "div"
+
+    );
 
   overlay.id =
 
@@ -1548,7 +1706,11 @@ function openGameCamera() {
 
   const video =
 
-    document.createElement("video");
+    document.createElement(
+
+      "video"
+
+    );
 
   video.autoplay = true;
 
@@ -1558,7 +1720,11 @@ function openGameCamera() {
 
   const captureBtn =
 
-    document.createElement("button");
+    document.createElement(
+
+      "button"
+
+    );
 
   captureBtn.textContent =
 
@@ -1570,7 +1736,11 @@ function openGameCamera() {
 
   const closeBtn =
 
-    document.createElement("button");
+    document.createElement(
+
+      "button"
+
+    );
 
   closeBtn.textContent =
 
@@ -1580,51 +1750,77 @@ function openGameCamera() {
 
     "camera-close";
 
-  overlay.appendChild(video);
+  overlay.appendChild(
 
-  overlay.appendChild(captureBtn);
+    video
 
-  overlay.appendChild(closeBtn);
+  );
 
-  document.body.appendChild(overlay);
+  overlay.appendChild(
+
+    captureBtn
+
+  );
+
+  overlay.appendChild(
+
+    closeBtn
+
+  );
+
+  document.body.appendChild(
+
+    overlay
+
+  );
 
   let stream = null;
 
-  navigator.mediaDevices.getUserMedia({
+  navigator.mediaDevices
 
-    video: {
+    .getUserMedia({
 
-      facingMode: "user"
+      video: {
 
-    },
+        facingMode: "user"
 
-    audio: false
+      },
 
-  })
+      audio: false
 
-  .then(cameraStream => {
+    })
 
-    stream =
+    .then(
 
-      cameraStream;
+      cameraStream => {
 
-    video.srcObject =
+        stream =
 
-      stream;
+          cameraStream;
 
-  })
+        video.srcObject =
 
-  .catch(error => {
+          stream;
 
-    alert(
+      }
 
-      "Camera permission was denied."
+    )
+
+    .catch(
+
+      error => {
+
+        alert(
+
+          "Camera permission was denied."
+
+        );
+
+        overlay.remove();
+
+      }
 
     );
-
-    overlay.remove();
-
-  });
 
   captureBtn.onclick =
 
@@ -1650,7 +1846,11 @@ function openGameCamera() {
 
       const canvas =
 
-        document.createElement("canvas");
+        document.createElement(
+
+          "canvas"
+
+        );
 
       canvas.width =
 
@@ -1662,9 +1862,13 @@ function openGameCamera() {
 
       const ctx =
 
-        canvas.getContext("2d");
+        canvas.getContext(
 
-      /* Mirror the selfie photo */
+          "2d"
+
+        );
+
+      /* Mirror selfie */
 
       ctx.translate(
 
@@ -1674,7 +1878,13 @@ function openGameCamera() {
 
       );
 
-      ctx.scale(-1, 1);
+      ctx.scale(
+
+        -1,
+
+        1
+
+      );
 
       ctx.drawImage(
 
@@ -1700,8 +1910,6 @@ function openGameCamera() {
 
         );
 
-      /* Save photo */
-
       localStorage.setItem(
 
         "operasiBungkusPlayerPhoto",
@@ -1710,17 +1918,29 @@ function openGameCamera() {
 
       );
 
-      /* Put photo on player */
-
       player.style.backgroundImage =
 
-        "url('" + photo + "')";
+        "url('" +
+
+        photo +
+
+        "')";
 
       player.textContent =
 
         "";
 
-      /* Stop camera */
+      playerPhotoTaken =
+
+        true;
+
+      startBtn.disabled =
+
+        false;
+
+      photoStatus.textContent =
+
+        "✅ Gambar berjaya diambil!";
 
       if (stream) {
 
@@ -1730,17 +1950,15 @@ function openGameCamera() {
 
           .forEach(
 
-            track => track.stop()
+            track =>
+
+              track.stop()
 
           );
 
       }
 
       overlay.remove();
-
-      message.textContent =
-
-        "📸 Gambar player berjaya diambil!";
 
     };
 
@@ -1756,7 +1974,9 @@ function openGameCamera() {
 
           .forEach(
 
-            track => track.stop()
+            track =>
+
+              track.stop()
 
           );
 
@@ -1768,31 +1988,17 @@ function openGameCamera() {
 
 }
 
-/* CAMERA BUTTON */
+/* INTRO CAMERA */
 
-const cameraButton =
+cameraIntroBtn.addEventListener(
 
-  document.createElement("button");
+  "click",
 
-cameraButton.id =
-
-  "cameraButton";
-
-cameraButton.textContent =
-
-  "📷 CAMERA";
-
-cameraButton.onclick =
-
-  openGameCamera;
-
-document.body.appendChild(
-
-  cameraButton
+  openGameCamera
 
 );
 
-/* LOAD SAVED PLAYER PHOTO */
+/* LOAD SAVED PHOTO */
 
 loadPlayerPhoto();
 
